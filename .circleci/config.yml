@@ -1,19 +1,22 @@
 version: '2.1'
+
+executors:
+  java17:
+    docker:
+      - image: 'cimg/openjdk:17.0'
+
 orbs:
   android: circleci/android@2.3
+
 jobs:
-  unit-test:
-    executor:
-      name: android/android-docker
-      resource-class: large
-      tag: 2022.08.1
+  test:
+    executor: java17
     steps:
       - checkout
-      - android/restore-gradle-cache
-      - android/run-tests:
-          test-command: ./gradlew testDebug
-      - android/save-gradle-cache
+      - android/run-tests
+      - android/save-gradle-cache:
+          cache-prefix: v1a
 workflows:
   test:
     jobs:
-      - unit-test
+      - test
