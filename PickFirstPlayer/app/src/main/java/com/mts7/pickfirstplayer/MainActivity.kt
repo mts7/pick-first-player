@@ -53,8 +53,9 @@ fun MainScreen() {
         // unused variable/expression
         contentPadding
         if (numberOfPlayers.value > 0) {
-            ChooseRandomPlayer(
+            DisplayRandomPlayer(
                 maxValue = numberOfPlayers.value,
+                player = generateRandomNumber(numberOfPlayers.value),
                 onResetClick = { numberOfPlayers.value = 0 }
             )
         } else {
@@ -209,15 +210,6 @@ fun PreviewNumberButton() {
 
 fun generateRandomNumber(maxValue: Int): Int {
     return (1..maxValue).random()
-}
-
-@Composable
-fun ChooseRandomPlayer(maxValue: Int, onResetClick: () -> Unit) {
-    DisplayRandomPlayer(
-        maxValue = maxValue,
-        player = generateRandomNumber(maxValue),
-        onResetClick = onResetClick
-    )
 }
 
 @Composable
