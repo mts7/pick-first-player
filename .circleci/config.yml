@@ -2,17 +2,18 @@ version: '2.1'
 orbs:
   android: circleci/android@2.3
 jobs:
-  test:
+  unit-test:
     executor:
-      name: android/android-machine
+      name: android/android-docker
       resource-class: large
-      tag: 2021.10.1
+      tag: 2022.08.1
     steps:
       - checkout
-      - android/run-tests
-      - android/save-gradle-cache:
-          cache-prefix: v1a
+      - android/restore-gradle-cache
+      - android/run-tests:
+          test-command: ./gradlew testDebug
+      - android/save-gradle-cache
 workflows:
   test:
     jobs:
-      - test
+      - unit-test
