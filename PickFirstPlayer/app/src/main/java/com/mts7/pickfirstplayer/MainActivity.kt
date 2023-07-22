@@ -49,11 +49,14 @@ fun MainScreen() {
     Scaffold(
         topBar = { TopBar() },
         bottomBar = { BottomBar() },
-    ) { _ ->
+    ) { contentPadding ->
+        // unused variable/expression
+        contentPadding
         if (numberOfPlayers.value > 0) {
             DisplayRandomPlayer(
                 maxValue = numberOfPlayers.value,
-                onResetClick = { numberOfPlayers.value = 0 },
+                player = generateRandomNumber(numberOfPlayers.value),
+                onResetClick = { numberOfPlayers.value = 0 }
             )
         } else {
             MainLayout(onNumberClick = { numberOfPlayers.value = it })
@@ -78,6 +81,12 @@ fun TopBar() {
     }
 }
 
+@Preview
+@Composable
+fun PreviewTopBar() {
+    TopBar()
+}
+
 @Composable
 fun BottomBar() {
     Surface(
@@ -87,7 +96,12 @@ fun BottomBar() {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Row {
+            Row(
+                modifier = Modifier.padding(
+                    top = 12.dp,
+                    bottom = 8.dp,
+                )
+            ) {
                 Text(
                     text = "App by Mike Rodarte",
                     fontSize = 18.sp,
@@ -102,6 +116,12 @@ fun BottomBar() {
             }
         }
     }
+}
+
+@Preview
+@Composable
+fun PreviewBottomBar() {
+    BottomBar()
 }
 
 @Composable
@@ -153,6 +173,12 @@ fun ButtonGrid(numbers: List<Int>, onNumberClick: (Int) -> Unit) {
     }
 }
 
+@Preview
+@Composable
+fun PreviewButtonGrid() {
+    ButtonGrid(listOf(2, 3, 4, 5, 6, 7)) {}
+}
+
 @Composable
 fun NumberButton(value: Int, onNumberClick: (Int) -> Unit) {
     Spacer(modifier = Modifier.padding(horizontal = 8.dp))
@@ -176,13 +202,36 @@ fun NumberButton(value: Int, onNumberClick: (Int) -> Unit) {
     }
 }
 
+@Preview
 @Composable
-fun DisplayRandomPlayer(maxValue: Int, onResetClick: () -> Unit) {
-    val player = (1..maxValue).random()
+fun PreviewNumberButton() {
+    NumberButton(value = 7, onNumberClick = {})
+}
+
+fun generateRandomNumber(maxValue: Int): Int {
+    return (1..maxValue).random()
+}
+
+@Composable
+fun DisplayRandomPlayer(maxValue: Int, player: Int, onResetClick: () -> Unit) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.fillMaxWidth(),
     ) {
+        Spacer(modifier = Modifier.height(48.dp))
+        Surface(
+            color = MaterialTheme.colorScheme.surface,
+        ) {
+            Text(
+                text = "Number of players: $maxValue",
+                color = MaterialTheme.colorScheme.secondary,
+                fontSize = 32.sp,
+                modifier = Modifier.padding(horizontal = 48.dp),
+            )
+        }
+        Spacer(
+            modifier = Modifier.height(96.dp)
+        )
         Text(
             text = player.toString(),
             modifier = Modifier.padding(24.dp),
@@ -201,5 +250,5 @@ fun DisplayRandomPlayer(maxValue: Int, onResetClick: () -> Unit) {
 @Preview
 @Composable
 fun PreviewDisplayRandomPlayer() {
-    DisplayRandomPlayer(maxValue = 6, onResetClick = {})
+    DisplayRandomPlayer(maxValue = 6, player = 3, onResetClick = {})
 }
