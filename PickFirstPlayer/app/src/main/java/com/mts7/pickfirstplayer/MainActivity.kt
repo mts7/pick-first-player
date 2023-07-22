@@ -12,8 +12,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -212,6 +215,26 @@ fun generateRandomNumber(maxValue: Int): Int {
     return (1..maxValue).random()
 }
 
+fun getRelationalWording(maxCount: Int, player: Int): String {
+    if (player == 1) {
+        return "You go first."
+    }
+
+    val half = maxCount / 2
+    val direction: String
+    val places: Int
+
+    if (player > half) {
+        direction = "right"
+        places = maxCount + 1 - player
+    } else {
+        direction = "left"
+        places = player - 1
+    }
+
+    return "The player $places to your $direction goes first."
+}
+
 @Composable
 fun DisplayRandomPlayer(maxValue: Int, player: Int, onResetClick: () -> Unit) {
     Column(
@@ -233,12 +256,19 @@ fun DisplayRandomPlayer(maxValue: Int, player: Int, onResetClick: () -> Unit) {
             modifier = Modifier.height(96.dp)
         )
         Text(
-            text = player.toString(),
+            text = getRelationalWording(maxValue, player),
             modifier = Modifier.padding(24.dp),
             color = MaterialTheme.colorScheme.primary,
-            fontSize = 128.sp,
+            fontSize = 64.sp,
+            lineHeight = 64.sp,
+            textAlign = TextAlign.Center
         )
         ElevatedButton(onClick = onResetClick) {
+            Icon(
+                imageVector = Icons.Default.ArrowBack,
+                contentDescription = "Reset",
+                modifier = Modifier.padding(end = 4.dp)
+            )
             Text(
                 text = "Reset",
                 fontSize = 32.sp
