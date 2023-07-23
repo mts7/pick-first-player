@@ -220,7 +220,7 @@ fun getRelationalWording(maxCount: Int, player: Int): String {
         return "You go first."
     }
 
-    val half = maxCount / 2
+    val half = kotlin.math.ceil(maxCount.toDouble() / 2)
     val direction: String
     val places: Int
 
