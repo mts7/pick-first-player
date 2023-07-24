@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.Button
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -33,6 +34,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mts7.pickfirstplayer.ui.theme.PickFirstPlayerTheme
+import kotlin.system.exitProcess
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -98,17 +100,22 @@ fun BottomBar() {
         modifier = Modifier.fillMaxWidth()
     ) {
         Row(
-            modifier = Modifier.padding(
-                top = 12.dp,
-                bottom = 8.dp,
-            ),
+            modifier = Modifier.padding(vertical = 4.dp),
             horizontalArrangement = Arrangement.End
         ) {
+            ElevatedButton(
+                onClick = { exitProcess(0) },
+                modifier = Modifier.padding(horizontal = 16.dp)
+            ) {
+                Text(
+                    text = "Exit",
+                    fontSize = 24.sp,
+                )
+            }
             Image(
                 painter = painterResource(id = R.drawable.mts7_logo_black_192),
                 contentDescription = "mts7 logo",
-                modifier = Modifier
-                    .size(48.dp)
+                modifier = Modifier.size(48.dp)
             )
         }
     }
