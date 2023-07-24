@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -96,27 +97,19 @@ fun BottomBar() {
         color = MaterialTheme.colorScheme.primary,
         modifier = Modifier.fillMaxWidth()
     ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally
+        Row(
+            modifier = Modifier.padding(
+                top = 12.dp,
+                bottom = 8.dp,
+            ),
+            horizontalArrangement = Arrangement.End
         ) {
-            Row(
-                modifier = Modifier.padding(
-                    top = 12.dp,
-                    bottom = 8.dp,
-                )
-            ) {
-                Text(
-                    text = "App by Mike Rodarte",
-                    fontSize = 18.sp,
-                    textAlign = TextAlign.Center
-                )
-                Image(
-                    painter = painterResource(id = R.drawable.mts7_logo_black_192),
-                    contentDescription = "mts7 logo",
-                    modifier = Modifier
-                        .size(32.dp)
-                )
-            }
+            Image(
+                painter = painterResource(id = R.drawable.mts7_logo_black_192),
+                contentDescription = "mts7 logo",
+                modifier = Modifier
+                    .size(48.dp)
+            )
         }
     }
 }
