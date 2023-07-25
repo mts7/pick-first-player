@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -13,8 +14,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -27,6 +31,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -58,15 +64,24 @@ fun MainScreen(onExit: () -> Unit) {
 
     Scaffold(
         topBar = { TopBar() },
-        bottomBar = { BottomBar(onExit = onExit) },
+        bottomBar = {
+            BottomBar(
+                onExit = onExit,
+                displayReset = numberOfPlayers.value > 0,
+                onResetClick = { numberOfPlayers.value = 0 })
+        },
     ) { contentPadding ->
         // unused variable/expression
         contentPadding
         if (numberOfPlayers.value > 0) {
+            val (direction, places) = getRelationalValues(
+                numberOfPlayers.value,
+                generateRandomNumber(numberOfPlayers.value)
+            )
             DisplayRandomPlayer(
                 maxValue = numberOfPlayers.value,
-                player = generateRandomNumber(numberOfPlayers.value),
-                onResetClick = { numberOfPlayers.value = 0 }
+                direction = direction,
+                places = places
             )
         } else {
             MainLayout(onNumberClick = { numberOfPlayers.value = it })
@@ -77,17 +92,21 @@ fun MainScreen(onExit: () -> Unit) {
 @Composable
 fun TopBar() {
     Surface(
-        color = MaterialTheme.colorScheme.secondary,
-        modifier = Modifier.fillMaxWidth()
+        color = MaterialTheme.colorScheme.primary,
+        modifier = Modifier
+            .fillMaxWidth(),
     ) {
-        Text(
-            text = "Pick First Player",
-            fontSize = 18.sp,
-            modifier = Modifier.padding(
-                horizontal = 8.dp,
-                vertical = 10.dp
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.logo_meeples),
+                contentDescription = "Pick First Player",
+                modifier = Modifier
+                    .size(96.dp)
+                    .clip(RoundedCornerShape(15)),
             )
-        )
+        }
     }
 }
 
@@ -98,7 +117,7 @@ fun PreviewTopBar() {
 }
 
 @Composable
-fun BottomBar(onExit: () -> Unit) {
+fun BottomBar(onExit: () -> Unit, displayReset: Boolean, onResetClick: () -> Unit) {
     Surface(
         color = MaterialTheme.colorScheme.primary,
         modifier = Modifier.fillMaxWidth()
@@ -107,6 +126,22 @@ fun BottomBar(onExit: () -> Unit) {
             modifier = Modifier.padding(vertical = 4.dp),
             horizontalArrangement = Arrangement.End
         ) {
+            if (displayReset) {
+                ElevatedButton(onClick = onResetClick) {
+                    Icon(
+                        imageVector = Icons.Default.ArrowBack,
+                        contentDescription = "Reset",
+                        modifier = Modifier.padding(end = 4.dp)
+                    )
+                    Text(
+                        text = "Reset",
+                        fontSize = 24.sp
+                    )
+                }
+                Spacer(
+                    modifier = Modifier.width(64.dp)
+                )
+            }
             ElevatedButton(
                 onClick = onExit,
                 modifier = Modifier.padding(horizontal = 16.dp)
@@ -128,25 +163,29 @@ fun BottomBar(onExit: () -> Unit) {
 @Preview
 @Composable
 fun PreviewBottomBar() {
-    BottomBar(onExit = {})
+    BottomBar(onExit = {}, true, onResetClick = {})
 }
 
 @Composable
 fun MainLayout(onNumberClick: (Int) -> Unit) {
-    Column(
-        modifier = Modifier.fillMaxWidth()
+    Surface(
+        modifier = Modifier.clip(RoundedCornerShape(15))
     ) {
-        Spacer(modifier = Modifier.height(48.dp))
-        Text(
-            text = "Tap the number of players.",
-            color = MaterialTheme.colorScheme.secondary,
-            fontSize = 48.sp,
-            lineHeight = 50.sp,
-            modifier = Modifier.padding(horizontal = 8.dp),
-            textAlign = TextAlign.Center,
-        )
-        Spacer(modifier = Modifier.height(24.dp))
-        ButtonGrid(numbers = listOf(2, 3, 4, 5, 6, 7), onNumberClick)
+        Column(
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Spacer(modifier = Modifier.height(128.dp))
+            Text(
+                text = "Tap the number of players.",
+                color = MaterialTheme.colorScheme.secondary,
+                fontSize = 32.sp,
+                lineHeight = 50.sp,
+                modifier = Modifier.padding(horizontal = 8.dp),
+                textAlign = TextAlign.Center,
+            )
+            Spacer(modifier = Modifier.height(24.dp))
+            ButtonGrid(numbers = listOf(2, 3, 4, 5, 6, 7), onNumberClick)
+        }
     }
 }
 
@@ -164,8 +203,12 @@ fun ButtonGrid(numbers: List<Int>, onNumberClick: (Int) -> Unit) {
     ) {
         Row {
             NumberButton(value = numbers[0], onNumberClick)
+            Spacer(
+                modifier = Modifier.padding(
+                    horizontal = 24.dp,
+                )
+            )
             NumberButton(value = numbers[1], onNumberClick)
-            NumberButton(value = numbers[2], onNumberClick)
         }
         Spacer(
             modifier = Modifier.padding(
@@ -173,8 +216,26 @@ fun ButtonGrid(numbers: List<Int>, onNumberClick: (Int) -> Unit) {
             )
         )
         Row {
+            NumberButton(value = numbers[2], onNumberClick)
+            Spacer(
+                modifier = Modifier.padding(
+                    horizontal = 24.dp,
+                )
+            )
             NumberButton(value = numbers[3], onNumberClick)
+        }
+        Spacer(
+            modifier = Modifier.padding(
+                vertical = 8.dp,
+            )
+        )
+        Row {
             NumberButton(value = numbers[4], onNumberClick)
+            Spacer(
+                modifier = Modifier.padding(
+                    horizontal = 24.dp,
+                )
+            )
             NumberButton(value = numbers[5], onNumberClick)
         }
     }
@@ -189,23 +250,22 @@ fun PreviewButtonGrid() {
 @Composable
 fun NumberButton(value: Int, onNumberClick: (Int) -> Unit) {
     Spacer(modifier = Modifier.padding(horizontal = 8.dp))
-    Surface {
-        ElevatedButton(
-            onClick = { onNumberClick(value) }
-        ) {
-            Text(
-                text = value.toString(),
-                color = MaterialTheme.colorScheme.primary,
-                modifier = Modifier
-                    .padding(
-                        horizontal = 4.dp,
-                        vertical = 4.dp,
-                    )
-                    .width(56.dp),
-                fontSize = 128.sp,
-                textAlign = TextAlign.Center,
-            )
-        }
+    Button(
+        onClick = { onNumberClick(value) },
+        shape = RoundedCornerShape(15),
+        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary)
+    ) {
+        Text(
+            text = value.toString(),
+            color = MaterialTheme.colorScheme.surface,
+            modifier = Modifier
+                .padding(
+                    horizontal = 24.dp,
+                    vertical = 4.dp,
+                ),
+            fontSize = 96.sp,
+            textAlign = TextAlign.Center,
+        )
     }
 }
 
@@ -219,70 +279,102 @@ fun generateRandomNumber(maxValue: Int): Int {
     return (1..maxValue).random()
 }
 
-fun getRelationalWording(maxCount: Int, player: Int): String {
+fun getRelationalValues(maxCount: Int, player: Int): Pair<String, Int> {
     if (player == 1) {
-        return "You go first."
+        return Pair("self", 0)
     }
 
     val half = kotlin.math.ceil(maxCount.toDouble() / 2)
-    val direction: String
-    val places: Int
 
     if (player > half) {
-        direction = "right"
-        places = maxCount + 1 - player
-    } else {
-        direction = "left"
-        places = player - 1
+        return Pair("right", maxCount + 1 - player)
+    }
+    return Pair("left", player - 1)
+}
+
+fun getRelationalWording(direction: String, places: Int): String {
+    if (places == 0) {
+        return "You go first."
+    }
+
+    if (places == 1) {
+        return "The player on your $direction goes first."
     }
 
     return "The player $places to your $direction goes first."
 }
 
 @Composable
-fun DisplayRandomPlayer(maxValue: Int, player: Int, onResetClick: () -> Unit) {
+fun DisplayRandomPlayer(maxValue: Int, direction: String, places: Int) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.fillMaxWidth(),
     ) {
-        Spacer(modifier = Modifier.height(48.dp))
-        Surface(
-            color = MaterialTheme.colorScheme.surface,
-        ) {
+        Spacer(modifier = Modifier.height(128.dp))
+        Surface {
             Text(
-                text = "Number of players: $maxValue",
-                color = MaterialTheme.colorScheme.secondary,
+                text = "Number of players",
                 fontSize = 32.sp,
                 modifier = Modifier.padding(horizontal = 48.dp),
             )
         }
-        Spacer(
-            modifier = Modifier.height(96.dp)
-        )
-        Text(
-            text = getRelationalWording(maxValue, player),
-            modifier = Modifier.padding(24.dp),
-            color = MaterialTheme.colorScheme.primary,
-            fontSize = 64.sp,
-            lineHeight = 64.sp,
-            textAlign = TextAlign.Center
-        )
-        ElevatedButton(onClick = onResetClick) {
-            Icon(
-                imageVector = Icons.Default.ArrowBack,
-                contentDescription = "Reset",
-                modifier = Modifier.padding(end = 4.dp)
-            )
+        Spacer(modifier = Modifier.height(48.dp))
+        Surface(
+            shape = RoundedCornerShape(15)
+        ) {
             Text(
-                text = "Reset",
-                fontSize = 32.sp
+                text = "$maxValue",
+                color = MaterialTheme.colorScheme.surface,
+                modifier = Modifier
+                    .background(color = MaterialTheme.colorScheme.secondary)
+                    .padding(
+                        horizontal = 24.dp,
+                        vertical = 4.dp,
+                    )
+                    .width(96.dp),
+                fontSize = 96.sp,
+                textAlign = TextAlign.Center,
             )
         }
+        Spacer(
+            modifier = Modifier.height(64.dp)
+        )
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.right_arrow_44621),
+                contentDescription = "<a href=\"https://www.freepik.com/icon/right-arrow_44621\">Icon by Freepik</a>",
+                modifier = Modifier
+                    .size(64.dp)
+                    .rotate(
+                        when (direction) {
+                            "left" -> 180.0F
+                            "self" -> 90.0F
+                            else -> 0.0F
+                        }
+                    ),
+            )
+            Spacer(
+                modifier = Modifier.width(24.dp)
+            )
+            Text(
+                text = if (places > 0) "$places" else "",
+                fontSize = 96.sp,
+            )
+        }
+        Text(
+            text = getRelationalWording(direction, places),
+            modifier = Modifier.padding(24.dp),
+            fontSize = 32.sp,
+            lineHeight = 32.sp,
+            textAlign = TextAlign.Center
+        )
     }
 }
 
 @Preview
 @Composable
 fun PreviewDisplayRandomPlayer() {
-    DisplayRandomPlayer(maxValue = 6, player = 3, onResetClick = {})
+    DisplayRandomPlayer(maxValue = 6, direction = "left", places = 3)
 }
