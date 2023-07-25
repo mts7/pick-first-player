@@ -40,20 +40,25 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             PickFirstPlayerTheme {
-                MainScreen()
+                MainScreen(onExit = { exitApplication() })
             }
         }
+    }
+
+    private fun exitApplication() {
+        this@MainActivity.finishAndRemoveTask()
+        exitProcess(0)
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen() {
+fun MainScreen(onExit: () -> Unit) {
     val numberOfPlayers = remember { mutableStateOf(0) }
 
     Scaffold(
         topBar = { TopBar() },
-        bottomBar = { BottomBar() },
+        bottomBar = { BottomBar(onExit = onExit) },
     ) { contentPadding ->
         // unused variable/expression
         contentPadding
@@ -93,7 +98,7 @@ fun PreviewTopBar() {
 }
 
 @Composable
-fun BottomBar() {
+fun BottomBar(onExit: () -> Unit) {
     Surface(
         color = MaterialTheme.colorScheme.primary,
         modifier = Modifier.fillMaxWidth()
@@ -103,7 +108,7 @@ fun BottomBar() {
             horizontalArrangement = Arrangement.End
         ) {
             ElevatedButton(
-                onClick = { exitProcess(0) },
+                onClick = onExit,
                 modifier = Modifier.padding(horizontal = 16.dp)
             ) {
                 Text(
@@ -123,7 +128,7 @@ fun BottomBar() {
 @Preview
 @Composable
 fun PreviewBottomBar() {
-    BottomBar()
+    BottomBar(onExit = {})
 }
 
 @Composable
