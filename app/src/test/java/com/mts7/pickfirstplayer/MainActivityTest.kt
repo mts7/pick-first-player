@@ -14,7 +14,7 @@ internal class MainActivityTest {
     }
 
     @Test
-    fun getRelationalWordingWith6PlayersChoosing1() {
+    fun getRelationalWordingWithSelf() {
         val direction = "self"
         val places = 0
 
@@ -24,7 +24,7 @@ internal class MainActivityTest {
     }
 
     @Test
-    fun getRelationalWordingWith6PlayersChoosing2() {
+    fun getRelationalWordingWithOneToLeft() {
         val direction = "left"
         val places = 1
 
@@ -34,7 +34,7 @@ internal class MainActivityTest {
     }
 
     @Test
-    fun getRelationalWordingWith6PlayersChoosing3() {
+    fun getRelationalWordingWithTwoToLeft() {
         val direction = "left"
         val places = 2
 
@@ -44,7 +44,7 @@ internal class MainActivityTest {
     }
 
     @Test
-    fun getRelationalWordingWith6PlayersChoosing4() {
+    fun getRelationalWordingWithThreeToRight() {
         val direction = "right"
         val places = 3
 
@@ -54,7 +54,7 @@ internal class MainActivityTest {
     }
 
     @Test
-    fun getRelationalWordingWith6PlayersChoosing5() {
+    fun getRelationalWordingWithTwoToRight() {
         val direction = "right"
         val places = 2
 
@@ -64,7 +64,7 @@ internal class MainActivityTest {
     }
 
     @Test
-    fun getRelationalWordingWith6PlayersChoosing6() {
+    fun getRelationalWordingWithOneToRight() {
         val direction = "right"
         val places = 1
 
@@ -72,4 +72,49 @@ internal class MainActivityTest {
 
         assertEquals("The player on your right goes first.", actual)
     }
+
+//    @ParameterizedTest(name = "getRelationalWording")
+//    @MethodSource("getRelationalWordingData")
+//    fun `relational wording should match as indicated`(data: RelationalWordingData) {
+//        val actual = getRelationalWording(data.direction, data.places)
+//
+//        assertEquals(data.expected, actual)
+//    }
+//
+//    private companion object {
+//        @JvmStatic
+//        fun getRelationalWordingData(): Stream<RelationalWordingData> = Stream.of(
+//            RelationalWordingData(
+//                direction = "self",
+//                places = 0,
+//                expected = "You go first."
+//            ),
+//            RelationalWordingData(
+//                direction = "left",
+//                places = 1,
+//                expected = "The player on your left goes first."
+//            ),
+//            RelationalWordingData(
+//                direction = "right",
+//                places = 1,
+//                expected = "The player on your right goes first."
+//            ),
+//            RelationalWordingData(
+//                direction = "left",
+//                places = 2,
+//                expected = "The player 2 to your left goes first."
+//            ),
+//            RelationalWordingData(
+//                direction = "right",
+//                places = 2,
+//                expected = "The player 2 to your right goes first."
+//            ),
+//        )
+//    }
+//
+//    data class RelationalWordingData(
+//        val direction: String,
+//        val places: Int,
+//        val expected: String,
+//    )
 }
