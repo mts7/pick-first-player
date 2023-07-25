@@ -14,6 +14,39 @@ internal class MainActivityTest {
     }
 
     @Test
+    fun getRelationalValuesWithSixPlayersSelectOne() {
+        val maxCount = 6
+        val player = 1
+        val expected = Pair("self", 0)
+
+        val actual = getRelationalValues(maxCount, player)
+
+        assertEquals(expected, actual)
+    }
+
+    @Test
+    fun getRelationalValuesWithFivePlayersSelectThree() {
+        val maxCount = 5
+        val player = 3
+        val expected = Pair("left", 2)
+
+        val actual = getRelationalValues(maxCount, player)
+
+        assertEquals(expected, actual)
+    }
+
+    @Test
+    fun getRelationalValuesWithFivePlayersSelectFour() {
+        val maxCount = 5
+        val player = 4
+        val expected = Pair("right", 2)
+
+        val actual = getRelationalValues(maxCount, player)
+
+        assertEquals(expected, actual)
+    }
+
+    @Test
     fun getRelationalWordingWithSelf() {
         val direction = "self"
         val places = 0
