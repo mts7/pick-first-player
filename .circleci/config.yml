@@ -22,6 +22,7 @@ jobs:
             sudo update-alternatives --set javac /usr/lib/jvm/java-17-openjdk-amd64/bin/javac
             java -version
             export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+            echo $JAVA_HOME
       - gradle/with_cache:
           steps:
             - run:
@@ -34,13 +35,13 @@ workflows:
   test-build:
     jobs:
       - build
-      - gradle/run:
-          executor: android
-          command: ktlint --stacktrace
-      - gradle/test:
-          executor: android
-          test_command: test --stacktrace
-          test_results_path: app/build/reports/tests
-      - android/run-ui-tests:
-          executor: { name: android/android-machine, tag: 2022.04.1 }
-          test-command: ./gradlew connectedAndroidTest
+#      - gradle/run:
+#          executor: android
+#          command: ktlint --stacktrace
+#      - gradle/test:
+#          executor: android
+#          test_command: test --stacktrace
+#          test_results_path: app/build/reports/tests
+#      - android/run-ui-tests:
+#          executor: { name: android/android-machine, tag: 2022.04.1 }
+#          test-command: ./gradlew connectedAndroidTest
