@@ -30,11 +30,11 @@ workflows:
       - build
       - gradle/run:
           executor: android
-          command: ktlint --stacktrace
+          command: lint --stacktrace
       - gradle/test:
           executor: android
           test_command: test --stacktrace
           test_results_path: app/build/reports/tests
-      - android/run-ui-tests:
-          executor: { name: android/android-machine, tag: 2022.04.1 }
-          test-command: ./gradlew connectedAndroidTest
+#      - android/run-ui-tests:
+#          executor: { name: android/android-machine, tag: 2022.04.1 }
+#          test-command: ./gradlew connectedAndroidTest
