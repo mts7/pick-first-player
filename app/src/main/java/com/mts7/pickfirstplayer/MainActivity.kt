@@ -62,6 +62,10 @@ fun getRelationalValues(maxCount: Int, player: Int): Pair<String, Int> {
         return Pair("self", 0)
     }
 
+    if (maxCount == 2 && player == 2) {
+        return Pair("other", 1)
+    }
+
     val half = kotlin.math.ceil(maxCount.toDouble() / 2)
 
     if (player > half) {
@@ -76,6 +80,10 @@ fun getRelationalWording(direction: String, places: Int): String {
     }
 
     if (places == 1) {
+        if (direction == "other") {
+            return "The other player goes first."
+        }
+
         return "The player on your $direction goes first."
     }
 
@@ -329,6 +337,7 @@ fun PlayerDirection(direction: String, places: Int) {
     val rotation = when (direction) {
         "left" -> 180.0F
         "self" -> 90.0F
+        "other" -> 270.0F
         else -> 0.0F
     }
 
@@ -340,7 +349,7 @@ fun PlayerDirection(direction: String, places: Int) {
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.padding(
                 horizontal = 24.dp,
-                vertical = if (places == 0) 24.dp else 0.dp
+                vertical = if (places == 0 || direction == "other") 24.dp else 0.dp
             )
         ) {
             Image(
@@ -350,7 +359,7 @@ fun PlayerDirection(direction: String, places: Int) {
                     .size(64.dp)
                     .rotate(rotation)
             )
-            if (places > 0) {
+            if (places > 0 && direction != "other") {
                 Spacer(
                     modifier = Modifier.width(24.dp)
                 )
@@ -374,12 +383,23 @@ fun PlayerDirection(direction: String, places: Int) {
 
 @Preview
 @Composable
+fun PreviewPlayerDirectionLeft() {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.fillMaxWidth(),
+    ) {
+        PlayerDirection("left", 2)
+    }
+}
+
+@Preview
+@Composable
 fun PreviewPlayerDirectionOther() {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.fillMaxWidth(),
     ) {
-        PlayerDirection("left", 4)
+        PlayerDirection("other", 1)
     }
 }
 

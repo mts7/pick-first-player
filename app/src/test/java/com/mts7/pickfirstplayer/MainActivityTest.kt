@@ -47,6 +47,17 @@ internal class MainActivityTest {
     }
 
     @Test
+    fun getRelationalValuesWithTwoPlayersSelectTwo() {
+        val maxCount = 2
+        val player = 2
+        val expected = Pair("other", 1)
+
+        val actual = getRelationalValues(maxCount, player)
+
+        assertEquals(expected, actual)
+    }
+
+    @Test
     fun getRelationalWordingWithSelf() {
         val direction = "self"
         val places = 0
@@ -54,6 +65,16 @@ internal class MainActivityTest {
         val actual = getRelationalWording(direction, places)
 
         assertEquals("You go first.", actual)
+    }
+
+    @Test
+    fun getRelationalWordingWithOther() {
+        val direction = "other"
+        val places = 1
+
+        val actual = getRelationalWording(direction, places)
+
+        assertEquals("The other player goes first.", actual)
     }
 
     @Test
