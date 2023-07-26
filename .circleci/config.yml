@@ -36,5 +36,5 @@ workflows:
           test_command: test --stacktrace
           test_results_path: app/build/reports/tests
       - android/run-ui-tests:
-          executor: android
+          executor: android/android-machine
           test-command: ./gradlew connectedAndroidTest
