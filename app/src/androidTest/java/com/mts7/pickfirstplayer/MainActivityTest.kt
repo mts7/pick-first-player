@@ -142,6 +142,16 @@ class MainActivityTest {
     }
 
     @Test
+    fun playerDirection_placesOneOther() {
+        val direction = "other"
+        val places = 1
+        rule.setContent { PlayerDirection(direction, places) }
+
+        rule.onNode(hasText("The other player goes first."))
+            .assertExists()
+    }
+
+    @Test
     fun playerDirection_placesTwo() {
         val direction = "right"
         val places = 2
