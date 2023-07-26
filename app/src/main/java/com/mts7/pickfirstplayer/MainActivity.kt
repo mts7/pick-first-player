@@ -62,6 +62,10 @@ fun getRelationalValues(maxCount: Int, player: Int): Pair<String, Int> {
         return Pair("self", 0)
     }
 
+    if (maxCount == 2 && player == 2) {
+        return Pair("other", 1)
+    }
+
     val half = kotlin.math.ceil(maxCount.toDouble() / 2)
 
     if (player > half) {
@@ -76,6 +80,10 @@ fun getRelationalWording(direction: String, places: Int): String {
     }
 
     if (places == 1) {
+        if (direction == "other") {
+            return "The other player goes first."
+        }
+
         return "The player on your $direction goes first."
     }
 
