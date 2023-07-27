@@ -50,8 +50,13 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+            val numberOfPlayers = remember { mutableStateOf(0) }
+
             PickFirstPlayerTheme {
-                MainScreen(onExit = { exitApplication() })
+                MainScreen(
+                    numberOfPlayers.value,
+                    updateNumber = { numberOfPlayers.value = it },
+                    onExit = { exitApplication() })
             }
         }
     }
@@ -101,32 +106,30 @@ fun getRelationalWording(direction: String, places: Int): String {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen(onExit: () -> Unit) {
-    val numberOfPlayers = remember { mutableStateOf(0) }
-
+fun MainScreen(numberOfPlayers: Int, updateNumber: (Int) -> Unit, onExit: () -> Unit) {
     Scaffold(
         topBar = { TopBar() },
         bottomBar = {
             BottomBar(
                 onExit = onExit,
-                displayReset = numberOfPlayers.value > 0,
-                onResetClick = { numberOfPlayers.value = 0 })
+                displayReset = numberOfPlayers > 0,
+                onResetClick = { updateNumber(0) })
         },
     ) { contentPadding ->
         // unused variable/expression
         contentPadding
-        if (numberOfPlayers.value > 0) {
+        if (numberOfPlayers > 0) {
             val (direction, places) = getRelationalValues(
-                numberOfPlayers.value,
-                generateRandomNumber(numberOfPlayers.value)
+                numberOfPlayers,
+                generateRandomNumber(numberOfPlayers)
             )
             ResultScreen(
-                maxValue = numberOfPlayers.value,
+                maxValue = numberOfPlayers,
                 direction = direction,
                 places = places
             )
         } else {
-            MainLayout(onNumberClick = { numberOfPlayers.value = it })
+            MainLayout(onNumberClick = { updateNumber(it) })
         }
     }
 }
@@ -135,7 +138,7 @@ fun MainScreen(onExit: () -> Unit) {
 @Composable
 fun PreviewMainScreen() {
     PickFirstPlayerTheme {
-        MainScreen(onExit = {})
+        MainScreen(0, updateNumber = {}, onExit = {})
     }
 }
 
