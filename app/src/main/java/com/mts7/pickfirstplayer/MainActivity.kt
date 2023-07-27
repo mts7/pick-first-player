@@ -2,6 +2,7 @@ package com.mts7.pickfirstplayer
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -58,6 +59,14 @@ class MainActivity : ComponentActivity() {
                     updateNumber = { numberOfPlayers.value = it },
                     onExit = { exitApplication() })
             }
+
+            this.onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    if (numberOfPlayers.value > 0) {
+                        numberOfPlayers.value = 0
+                    }
+                }
+            })
         }
     }
 
