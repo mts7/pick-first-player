@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -176,9 +177,10 @@ fun BottomBar(onExit: () -> Unit, displayReset: Boolean, onResetClick: () -> Uni
         modifier = Modifier.fillMaxWidth()
     ) {
         Row(
-            modifier = Modifier.padding(vertical = 12.dp, horizontal = 30.dp),
-
-            ) {
+            modifier = Modifier
+                .padding(vertical = 12.dp, horizontal = 30.dp),
+            horizontalArrangement = Arrangement.SpaceEvenly,
+        ) {
             if (displayReset) {
                 ElevatedButton(
                     onClick = onResetClick,
@@ -201,6 +203,10 @@ fun BottomBar(onExit: () -> Unit, displayReset: Boolean, onResetClick: () -> Uni
                 Spacer(
                     modifier = Modifier.width(16.dp)
                 )
+            } else {
+                Spacer(
+                    modifier = Modifier.width(146.dp)
+                )
             }
             ElevatedButton(
                 onClick = onExit,
@@ -221,6 +227,9 @@ fun BottomBar(onExit: () -> Unit, displayReset: Boolean, onResetClick: () -> Uni
                         .wrapContentHeight(),
                 )
             }
+            Spacer(
+                modifier = Modifier.width(16.dp)
+            )
             Image(
                 painter = painterResource(id = R.drawable.mts7_logo_black_192),
                 contentDescription = "mts7 logo",
@@ -232,9 +241,17 @@ fun BottomBar(onExit: () -> Unit, displayReset: Boolean, onResetClick: () -> Uni
 
 @Preview
 @Composable
-fun PreviewBottomBar() {
+fun PreviewBottomBarWithReset() {
     PickFirstPlayerTheme {
         BottomBar(onExit = {}, true, onResetClick = {})
+    }
+}
+
+@Preview
+@Composable
+fun PreviewBottomBarWithoutReset() {
+    PickFirstPlayerTheme {
+        BottomBar(onExit = {}, false, onResetClick = {})
     }
 }
 
