@@ -9,6 +9,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -183,7 +184,7 @@ fun TopBar() {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Image(
-                painter = painterResource(id = R.drawable.logo_meeples),
+                painter = painterResource(id = R.drawable.logo),
                 contentDescription = "Pick First Player",
                 modifier = Modifier
                     .size(96.dp)
@@ -306,9 +307,7 @@ fun MainLayout(onNumberClick: (Int) -> Unit) {
                 fontFamily = Lato,
                 fontSize = 28.sp,
                 lineHeight = 28.sp,
-                //modifier = Modifier.padding(horizontal = 12.dp),
             )
-            Spacer(modifier = Modifier.height(40.dp))
             ButtonGrid(onNumberClick)
         }
     }
@@ -328,16 +327,19 @@ fun ButtonGrid(onNumberClick: (Int) -> Unit) {
 
     LazyVerticalGrid(
         columns = GridCells.Adaptive(138.dp),
+//        contentPadding = PaddingValues(
+//            horizontal = 24.dp
+//        ),
     ) {
         items(numbers.size) { index ->
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                NumberButton(value = numbers[index].toInt(), onNumberClick)
                 Spacer(
                     modifier = Modifier
-                        .height(16.dp)
+                        .height(24.dp)
                 )
+                NumberButton(value = numbers[index].toInt(), onNumberClick)
             }
         }
     }
@@ -434,7 +436,7 @@ fun PlayerDirection(direction: String, places: Int, refreshSelection: () -> Unit
             .clickable { refreshSelection() },
     ) {
         Image(
-            painter = painterResource(id = R.drawable.back_arrow),
+            painter = painterResource(id = if (isSystemInDarkTheme()) R.drawable.white_arrow else R.drawable.black_arrow),
             contentDescription = "Back arrow from Nikita Gohel",
             modifier = Modifier
                 .size(64.dp)

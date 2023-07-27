@@ -9,6 +9,7 @@ import androidx.compose.ui.test.hasParent
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.performClick
+import com.mts7.pickfirstplayer.ui.theme.PickFirstPlayerTheme
 import org.junit.Rule
 import org.junit.Test
 
@@ -31,11 +32,31 @@ class MainActivityTest {
     @Test
     fun buttonGrid_hasSixNumberButtons() {
         rule.setContent {
-            ButtonGrid(
-                onNumberClick = {}
-            )
+            PickFirstPlayerTheme {
+                ButtonGrid(
+                    onNumberClick = {}
+                )
+            }
         }
 
+        rule.onNode(hasText("2"))
+            .assertExists()
+            .assertHasClickAction()
+        rule.onNode(hasText("3"))
+            .assertExists()
+            .assertHasClickAction()
+        rule.onNode(hasText("4"))
+            .assertExists()
+            .assertHasClickAction()
+        rule.onNode(hasText("5"))
+            .assertExists()
+            .assertHasClickAction()
+        rule.onNode(hasText("6"))
+            .assertExists()
+            .assertHasClickAction()
+        rule.onNode(hasText("7"))
+            .assertExists()
+            .assertHasClickAction()
         rule.onAllNodes(hasClickAction())
             .assertCountEquals(6)
     }
