@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -22,12 +23,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ElevatedButton
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -52,12 +53,21 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             val numberOfPlayers = remember { mutableStateOf(0) }
+            val player = remember { mutableStateOf(0) }
 
             PickFirstPlayerTheme {
                 MainScreen(
                     numberOfPlayers.value,
-                    updateNumber = { numberOfPlayers.value = it },
-                    onExit = { exitApplication() })
+                    player.value,
+                    updateNumber = {
+                        numberOfPlayers.value = it
+                        setRandomPlayer(player, numberOfPlayers.value)
+                    },
+                    onExit = { exitApplication() },
+                    onRefresh = {
+                        setRandomPlayer(player, numberOfPlayers.value)
+                    }
+                )
             }
 
             this.onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
@@ -76,10 +86,10 @@ class MainActivity : ComponentActivity() {
         this@MainActivity.finishAndRemoveTask()
         exitProcess(0)
     }
-}
 
-fun generateRandomNumber(maxValue: Int): Int {
-    return (1..maxValue).random()
+    private fun setRandomPlayer(player: MutableState<Int>, maxPlayers: Int) {
+        player.value = (1..maxPlayers).random()
+    }
 }
 
 fun getRelationalValues(maxCount: Int, player: Int): Pair<String, Int> {
@@ -115,9 +125,14 @@ fun getRelationalWording(direction: String, places: Int): String {
     return "The player $places to your $direction goes first."
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen(numberOfPlayers: Int, updateNumber: (Int) -> Unit, onExit: () -> Unit) {
+fun MainScreen(
+    numberOfPlayers: Int,
+    player: Int,
+    updateNumber: (Int) -> Unit,
+    onExit: () -> Unit,
+    onRefresh: () -> Unit
+) {
     Scaffold(
         topBar = { TopBar() },
         bottomBar = {
@@ -127,17 +142,18 @@ fun MainScreen(numberOfPlayers: Int, updateNumber: (Int) -> Unit, onExit: () -> 
                 onResetClick = { updateNumber(0) })
         },
     ) { contentPadding ->
-        // unused variable/expression
+        // unsure of what to do with the unused variable
         contentPadding
         if (numberOfPlayers > 0) {
             val (direction, places) = getRelationalValues(
                 numberOfPlayers,
-                generateRandomNumber(numberOfPlayers)
+                player
             )
             ResultScreen(
                 maxValue = numberOfPlayers,
                 direction = direction,
-                places = places
+                places = places,
+                refreshSelection = onRefresh,
             )
         } else {
             MainLayout(onNumberClick = { updateNumber(it) })
@@ -149,7 +165,7 @@ fun MainScreen(numberOfPlayers: Int, updateNumber: (Int) -> Unit, onExit: () -> 
 @Composable
 fun PreviewMainScreen() {
     PickFirstPlayerTheme {
-        MainScreen(0, updateNumber = {}, onExit = {})
+        MainScreen(0, player = 2, updateNumber = {}, onExit = {}, onRefresh = {})
     }
 }
 
@@ -396,7 +412,7 @@ fun PreviewChosenValue() {
 }
 
 @Composable
-fun PlayerDirection(direction: String, places: Int) {
+fun PlayerDirection(direction: String, places: Int, refreshSelection: () -> Unit) {
     val rotation = when (direction) {
         "left" -> 0.0F
         "self" -> 270.0F
@@ -408,10 +424,12 @@ fun PlayerDirection(direction: String, places: Int) {
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.padding(
-            horizontal = 24.dp,
-            vertical = if (isVertical) 8.dp else 0.dp
-        )
+        modifier = Modifier
+            .padding(
+                horizontal = 24.dp,
+                vertical = if (isVertical) 8.dp else 0.dp
+            )
+            .clickable { refreshSelection() },
     ) {
         Image(
             painter = painterResource(id = R.drawable.back_arrow),
@@ -455,7 +473,7 @@ fun PreviewPlayerDirectionLeft() {
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.fillMaxWidth(),
         ) {
-            PlayerDirection("left", 2)
+            PlayerDirection("left", 2, refreshSelection = {})
         }
     }
 }
@@ -468,7 +486,7 @@ fun PreviewPlayerDirectionRight() {
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.fillMaxWidth(),
         ) {
-            PlayerDirection("right", 3)
+            PlayerDirection("right", 3, refreshSelection = {})
         }
     }
 }
@@ -481,7 +499,7 @@ fun PreviewPlayerDirectionOther() {
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.fillMaxWidth(),
         ) {
-            PlayerDirection("other", 1)
+            PlayerDirection("other", 1, refreshSelection = {})
         }
     }
 }
@@ -494,13 +512,13 @@ fun PreviewPlayerDirectionSelf() {
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.fillMaxWidth(),
         ) {
-            PlayerDirection("self", 0)
+            PlayerDirection("self", 0, refreshSelection = {})
         }
     }
 }
 
 @Composable
-fun ResultScreen(maxValue: Int, direction: String, places: Int) {
+fun ResultScreen(maxValue: Int, direction: String, places: Int, refreshSelection: () -> Unit) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.fillMaxWidth(),
@@ -510,7 +528,7 @@ fun ResultScreen(maxValue: Int, direction: String, places: Int) {
         Spacer(
             modifier = Modifier.height(32.dp)
         )
-        PlayerDirection(direction, places)
+        PlayerDirection(direction, places, refreshSelection)
     }
 }
 
@@ -518,6 +536,6 @@ fun ResultScreen(maxValue: Int, direction: String, places: Int) {
 @Composable
 fun PreviewResultScreen() {
     PickFirstPlayerTheme {
-        ResultScreen(maxValue = 6, direction = "left", places = 3)
+        ResultScreen(maxValue = 6, direction = "left", places = 3, refreshSelection = {})
     }
 }
