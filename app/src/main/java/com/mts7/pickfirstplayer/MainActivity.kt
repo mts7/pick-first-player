@@ -327,9 +327,9 @@ fun ButtonGrid(onNumberClick: (Int) -> Unit) {
 
     LazyVerticalGrid(
         columns = GridCells.Adaptive(138.dp),
-        contentPadding = PaddingValues(
-            horizontal = 24.dp
-        ),
+//        contentPadding = PaddingValues(
+//            horizontal = 24.dp
+//        ),
     ) {
         items(numbers.size) { index ->
             Column(
