@@ -187,7 +187,7 @@ fun TopBar() {
                 painter = painterResource(id = R.drawable.logo),
                 contentDescription = "Pick First Player",
                 modifier = Modifier
-                    .size(96.dp)
+                    .size(72.dp)
                     .clip(RoundedCornerShape(15)),
             )
         }
@@ -297,7 +297,7 @@ fun MainLayout(onNumberClick: (Int) -> Unit) {
             modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Spacer(modifier = Modifier.height(144.dp))
+            Spacer(modifier = Modifier.height(100.dp))
             Text(
                 text = "Tap the number of players.",
                 //color = MaterialTheme.colorScheme.secondary,
@@ -527,7 +527,7 @@ fun ResultScreen(maxValue: Int, direction: String, places: Int, refreshSelection
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.fillMaxWidth(),
     ) {
-        Spacer(modifier = Modifier.height(144.dp))
+        Spacer(modifier = Modifier.height(100.dp))
         ChosenValue(maxValue)
         Spacer(
             modifier = Modifier.height(32.dp)
