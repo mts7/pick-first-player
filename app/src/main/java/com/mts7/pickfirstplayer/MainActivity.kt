@@ -329,21 +329,23 @@ fun PreviewMainLayout() {
 fun ButtonGrid(onNumberClick: (Int) -> Unit) {
     val numbers = (2..7).map { it.toString() }
 
-    LazyVerticalGrid(
-        columns = GridCells.Adaptive(138.dp),
+    Row(
+        horizontalArrangement = Arrangement.SpaceEvenly,
+    ) {
+        Spacer(modifier = Modifier.width(16.dp))
+        LazyVerticalGrid(
+            columns = GridCells.Adaptive(138.dp),
 //        contentPadding = PaddingValues(
 //            horizontal = 24.dp
 //        ),
-    ) {
-        items(numbers.size) { index ->
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
-                Spacer(
-                    modifier = Modifier
-                        .height(24.dp)
-                )
-                NumberButton(value = numbers[index].toInt(), onNumberClick)
+        ) {
+            items(numbers.size) { index ->
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                    Spacer(modifier = Modifier.height(24.dp))
+                    NumberButton(value = numbers[index].toInt(), onNumberClick)
+                }
             }
         }
     }
