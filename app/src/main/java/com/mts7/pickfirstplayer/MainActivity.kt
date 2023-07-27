@@ -4,7 +4,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -13,6 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -29,11 +29,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.mts7.pickfirstplayer.ui.theme.Blue20
+import com.mts7.pickfirstplayer.ui.theme.Blue60
+import com.mts7.pickfirstplayer.ui.theme.Blue80
+import com.mts7.pickfirstplayer.ui.theme.Lato
 import com.mts7.pickfirstplayer.ui.theme.PickFirstPlayerTheme
 import kotlin.system.exitProcess
 
@@ -131,7 +136,8 @@ fun PreviewMainScreen() {
 @Composable
 fun TopBar() {
     Surface(
-        color = MaterialTheme.colorScheme.primary,
+        //color = MaterialTheme.colorScheme.tertiary,
+        color = Blue60,
         modifier = Modifier
             .fillMaxWidth(),
     ) {
@@ -142,7 +148,7 @@ fun TopBar() {
                 painter = painterResource(id = R.drawable.logo_meeples),
                 contentDescription = "Pick First Player",
                 modifier = Modifier
-                    .size(96.dp)
+                    .size(120.dp)
                     .clip(RoundedCornerShape(15)),
             )
         }
@@ -158,19 +164,30 @@ fun PreviewTopBar() {
 @Composable
 fun BottomBar(onExit: () -> Unit, displayReset: Boolean, onResetClick: () -> Unit) {
     Surface(
-        color = MaterialTheme.colorScheme.primary,
+//        color = MaterialTheme.colorScheme.tertiary,
+        color = Blue60,
         modifier = Modifier.fillMaxWidth()
     ) {
         Row(
-            modifier = Modifier.padding(vertical = 4.dp),
-            horizontalArrangement = Arrangement.End
+            modifier = Modifier.padding(vertical = 12.dp, horizontal = 30.dp),
+            //horizontalArrangement = Arrangement.End
+
         ) {
             if (displayReset) {
-                ElevatedButton(onClick = onResetClick) {
+                ElevatedButton(
+                    onClick = onResetClick,
+                    colors = ButtonDefaults.buttonColors(containerColor = Blue80),
+                    shape = RoundedCornerShape(15),
+                    modifier = Modifier.width(128.dp)
+                ) {
                     Text(
                         text = "Reset",
+                        //color = MaterialTheme.colorScheme.onPrimary,
+                        color = Color.White,
+                        //style = MaterialTheme.typography.labelMedium,
+                        fontFamily = Lato,
                         fontSize = 24.sp,
-                        modifier = Modifier.padding(horizontal = 24.dp)
+                        lineHeight = 24.sp,
                     )
                 }
                 Spacer(
@@ -179,12 +196,20 @@ fun BottomBar(onExit: () -> Unit, displayReset: Boolean, onResetClick: () -> Uni
             }
             ElevatedButton(
                 onClick = onExit,
-                modifier = Modifier.padding(horizontal = 16.dp)
+                modifier = Modifier
+                    .width(128.dp)
+                    .height(46.dp),
+                shape = RoundedCornerShape(15),
+                colors = ButtonDefaults.buttonColors(containerColor = Blue80)
             ) {
                 Text(
                     text = "Exit",
+                    style = MaterialTheme.typography.labelMedium,
+                    //color = MaterialTheme.colorScheme.onPrimary,
+                    color = Color.White,
                     fontSize = 24.sp,
-                    modifier = Modifier.padding(horizontal = 24.dp)
+                    modifier = Modifier
+                        .wrapContentHeight(),
                 )
             }
             Image(
@@ -208,16 +233,19 @@ fun MainLayout(onNumberClick: (Int) -> Unit) {
         modifier = Modifier.clip(RoundedCornerShape(15))
     ) {
         Column(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Spacer(modifier = Modifier.height(128.dp))
+            Spacer(modifier = Modifier.height(144.dp))
             Text(
                 text = "Tap the number of players.",
                 color = MaterialTheme.colorScheme.secondary,
-                fontSize = 32.sp,
-                lineHeight = 32.sp,
-                modifier = Modifier.padding(horizontal = 8.dp),
                 textAlign = TextAlign.Center,
+                //style = MaterialTheme.typography.bodyMedium,
+                fontFamily = Lato,
+                fontSize = 28.sp,
+                lineHeight = 28.sp,
+                //modifier = Modifier.padding(horizontal = 12.dp),
             )
             Spacer(modifier = Modifier.height(24.dp))
             ButtonGrid(onNumberClick)
@@ -255,6 +283,7 @@ fun PreviewButtonRow() {
 fun ButtonGrid(onNumberClick: (Int) -> Unit) {
     val numbers = listOf(2, 3, 4, 5, 6, 7)
 
+    //LazyVerticalGrid(columns = 2, content = {})
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.fillMaxWidth()
@@ -287,17 +316,23 @@ fun NumberButton(value: Int, onNumberClick: (Int) -> Unit) {
     Button(
         onClick = { onNumberClick(value) },
         shape = RoundedCornerShape(15),
-        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary)
+        colors = ButtonDefaults.buttonColors(
+            //containerColor = MaterialTheme.colorScheme.primary,
+            containerColor = Blue20,
+        )
     ) {
         Text(
             text = value.toString(),
-            color = MaterialTheme.colorScheme.surface,
+            //color = MaterialTheme.colorScheme.secondary,
+            color = Color.Black,
             modifier = Modifier
-                .padding(
-                    horizontal = 16.dp,
-                    vertical = 0.dp,
-                ),
-            fontSize = 72.sp,
+                .height(89.dp)
+                .width(72.dp)
+                .wrapContentHeight(),
+            //style = MaterialTheme.typography.displayLarge,
+            fontFamily = Lato,
+            fontSize = 62.sp,
+            lineHeight = 66.sp,
             textAlign = TextAlign.Center,
         )
     }
@@ -314,8 +349,9 @@ fun ChosenValue(maxValue: Int) {
     Surface {
         Text(
             text = "Number of players: $maxValue",
-            fontSize = 24.sp,
-            modifier = Modifier.padding(horizontal = 48.dp),
+            color = MaterialTheme.colorScheme.primary,
+            style = MaterialTheme.typography.bodyMedium,
+            //modifier = Modifier.padding(horizontal = 48.dp),
         )
     }
     Spacer(modifier = Modifier.height(48.dp))
@@ -335,49 +371,48 @@ fun PreviewChosenValue() {
 @Composable
 fun PlayerDirection(direction: String, places: Int) {
     val rotation = when (direction) {
-        "left" -> 180.0F
-        "self" -> 90.0F
-        "other" -> 270.0F
-        else -> 0.0F
+        "left" -> 0.0F
+        "self" -> 270.0F
+        "other" -> 90.0F
+        else -> 180.0F
     }
 
-    Surface(
-        color = MaterialTheme.colorScheme.primary,
-        shape = RoundedCornerShape(15)
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.padding(
+            horizontal = 24.dp,
+            vertical = if (places == 0 || direction == "other") 24.dp else 0.dp
+        )
     ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.padding(
-                horizontal = 24.dp,
-                vertical = if (places == 0 || direction == "other") 24.dp else 0.dp
+        Image(
+            painter = painterResource(id = R.drawable.back_arrow),
+            contentDescription = "<a href=\"https://www.freepik.com/icon/right-arrow_44621\">Icon by Freepik</a>",
+            modifier = Modifier
+                .size(64.dp)
+                .rotate(rotation)
+        )
+        if (places > 0 && direction != "other") {
+            Spacer(
+                modifier = Modifier.width(24.dp)
             )
-        ) {
-            Image(
-                painter = painterResource(id = R.drawable.right_arrow_44621),
-                contentDescription = "<a href=\"https://www.freepik.com/icon/right-arrow_44621\">Icon by Freepik</a>",
-                modifier = Modifier
-                    .size(64.dp)
-                    .rotate(rotation)
+            Text(
+                text = "$places",
+                color = MaterialTheme.colorScheme.primary,
+                style = MaterialTheme.typography.displayLarge,
             )
-            if (places > 0 && direction != "other") {
-                Spacer(
-                    modifier = Modifier.width(24.dp)
-                )
-                Text(
-                    text = "$places",
-                    fontSize = 96.sp,
-                )
-            }
         }
     }
     Text(
         text = getRelationalWording(direction, places),
         modifier = Modifier
             .padding(24.dp)
-            .width(144.dp),
-        fontSize = 24.sp,
-        lineHeight = 24.sp,
-        textAlign = TextAlign.Center
+            .width(240.dp),
+        //style = MaterialTheme.typography.bodyMedium,
+        fontFamily = Lato,
+        fontSize = 28.sp,
+        lineHeight = 36.sp,
+        color = MaterialTheme.colorScheme.primary,
+        textAlign = TextAlign.Center,
     )
 }
 
@@ -420,10 +455,10 @@ fun ResultScreen(maxValue: Int, direction: String, places: Int) {
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.fillMaxWidth(),
     ) {
-        Spacer(modifier = Modifier.height(128.dp))
+        Spacer(modifier = Modifier.height(144.dp))
         ChosenValue(maxValue)
         Spacer(
-            modifier = Modifier.height(64.dp)
+            modifier = Modifier.height(32.dp)
         )
         PlayerDirection(direction, places)
     }
