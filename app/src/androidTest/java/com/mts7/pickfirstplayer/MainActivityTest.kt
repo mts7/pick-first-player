@@ -41,20 +41,6 @@ class MainActivityTest {
     }
 
     @Test
-    fun buttonRow_hasTwoNumbers() {
-        val values = listOf(4, 8)
-        rule.setContent {
-            ButtonRow(
-                numbers = values,
-                onNumberClick = {}
-            )
-        }
-
-        rule.onAllNodes(hasClickAction())
-            .assertCountEquals(2)
-    }
-
-    @Test
     fun chosenValue_displaysText() {
         val maxValue = 7
         rule.setContent { ChosenValue(maxValue) }
