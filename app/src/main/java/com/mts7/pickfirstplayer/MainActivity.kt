@@ -259,7 +259,7 @@ fun MainLayout(onNumberClick: (Int) -> Unit) {
                 lineHeight = 28.sp,
                 //modifier = Modifier.padding(horizontal = 12.dp),
             )
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(40.dp))
             ButtonGrid(onNumberClick)
         }
     }
