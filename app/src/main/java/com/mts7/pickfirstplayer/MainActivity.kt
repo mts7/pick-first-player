@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -191,7 +192,7 @@ fun BottomBar(onExit: () -> Unit, displayReset: Boolean, onResetClick: () -> Uni
                     Text(
                         text = "Reset",
                         //color = MaterialTheme.colorScheme.onPrimary,
-                        color = Color.White,
+                        color = if (isSystemInDarkTheme()) Color.Black else Color.White,
                         //style = MaterialTheme.typography.labelMedium,
                         fontFamily = Lato,
                         fontSize = 18.sp,
@@ -214,7 +215,7 @@ fun BottomBar(onExit: () -> Unit, displayReset: Boolean, onResetClick: () -> Uni
                     text = "Exit",
                     style = MaterialTheme.typography.labelMedium,
                     //color = MaterialTheme.colorScheme.onPrimary,
-                    color = Color.White,
+                    color = if (isSystemInDarkTheme()) Color.Black else Color.White,
                     fontSize = 18.sp,
                     modifier = Modifier
                         .wrapContentHeight(),
@@ -250,7 +251,7 @@ fun MainLayout(onNumberClick: (Int) -> Unit) {
             Text(
                 text = "Tap the number of players.",
                 //color = MaterialTheme.colorScheme.secondary,
-                color = Color.Black,
+                color = if (isSystemInDarkTheme()) Color.White else Color.Black,
                 textAlign = TextAlign.Center,
                 //style = MaterialTheme.typography.bodyMedium,
                 fontFamily = Lato,
@@ -315,7 +316,7 @@ fun NumberButton(value: Int, onNumberClick: (Int) -> Unit) {
         Text(
             text = value.toString(),
             //color = MaterialTheme.colorScheme.secondary,
-            color = Color.Black,
+            color = if (isSystemInDarkTheme()) Color.White else Color.Black,
             modifier = Modifier
                 .height(96.dp)
                 .width(72.dp)
@@ -343,7 +344,7 @@ fun ChosenValue(maxValue: Int) {
         Text(
             text = "Number of players: $maxValue",
             //color = MaterialTheme.colorScheme.secondary,
-            color = Color.Black,
+            color = if (isSystemInDarkTheme()) Color.White else Color.Black,
             style = MaterialTheme.typography.bodyMedium,
             //modifier = Modifier.padding(horizontal = 48.dp),
         )
@@ -394,7 +395,7 @@ fun PlayerDirection(direction: String, places: Int) {
             Text(
                 text = "$places",
                 //color = MaterialTheme.colorScheme.secondary,
-                color = Color.Black,
+                color = if (isSystemInDarkTheme()) Color.White else Color.Black,
                 style = MaterialTheme.typography.displayLarge,
             )
         }
@@ -409,7 +410,7 @@ fun PlayerDirection(direction: String, places: Int) {
         fontSize = 28.sp,
         lineHeight = 36.sp,
         //color = MaterialTheme.colorScheme.secondary,
-        color = Color.Black,
+        color = if (isSystemInDarkTheme()) Color.White else Color.Black,
         textAlign = TextAlign.Center,
     )
 }
