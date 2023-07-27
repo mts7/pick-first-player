@@ -111,7 +111,7 @@ class MainActivityTest {
         val places = 2
         rule.setContent { PlayerDirection(direction, places) }
 
-        rule.onNode(hasContentDescription("Icon", true))
+        rule.onNode(hasContentDescription("Back arrow", true))
             .assertExists()
 
         // TODO: test the rotation float value for all three directions
@@ -147,7 +147,7 @@ class MainActivityTest {
             hasText("$places") and hasParent(
                 hasAnyChild(
                     hasContentDescription(
-                        "Icon",
+                        "Back arrow",
                         true
                     )
                 )
