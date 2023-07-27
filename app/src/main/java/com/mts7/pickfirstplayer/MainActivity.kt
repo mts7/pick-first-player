@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -13,6 +14,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -130,14 +133,16 @@ fun MainScreen(onExit: () -> Unit) {
 @Preview
 @Composable
 fun PreviewMainScreen() {
-    MainScreen(onExit = {})
+    PickFirstPlayerTheme {
+        MainScreen(onExit = {})
+    }
 }
 
 @Composable
 fun TopBar() {
     Surface(
         //color = MaterialTheme.colorScheme.tertiary,
-        color = Blue60,
+        color = if (isSystemInDarkTheme()) Blue80 else Blue60,
         modifier = Modifier
             .fillMaxWidth(),
     ) {
@@ -158,25 +163,27 @@ fun TopBar() {
 @Preview
 @Composable
 fun PreviewTopBar() {
-    TopBar()
+    PickFirstPlayerTheme {
+        TopBar()
+    }
 }
 
 @Composable
 fun BottomBar(onExit: () -> Unit, displayReset: Boolean, onResetClick: () -> Unit) {
     Surface(
-//        color = MaterialTheme.colorScheme.tertiary,
-        color = Blue60,
+        //color = MaterialTheme.colorScheme.tertiary,
+        color = if (isSystemInDarkTheme()) Blue80 else Blue60,
         modifier = Modifier.fillMaxWidth()
     ) {
         Row(
             modifier = Modifier.padding(vertical = 12.dp, horizontal = 30.dp),
-            //horizontalArrangement = Arrangement.End
 
-        ) {
+            ) {
             if (displayReset) {
                 ElevatedButton(
                     onClick = onResetClick,
-                    colors = ButtonDefaults.buttonColors(containerColor = Blue80),
+                    //colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
+                    colors = ButtonDefaults.buttonColors(containerColor = if (isSystemInDarkTheme()) Blue60 else Blue80),
                     shape = RoundedCornerShape(15),
                     modifier = Modifier
                         .width(128.dp)
@@ -185,7 +192,7 @@ fun BottomBar(onExit: () -> Unit, displayReset: Boolean, onResetClick: () -> Uni
                     Text(
                         text = "Reset",
                         //color = MaterialTheme.colorScheme.onPrimary,
-                        color = Color.White,
+                        color = if (isSystemInDarkTheme()) Color.Black else Color.White,
                         //style = MaterialTheme.typography.labelMedium,
                         fontFamily = Lato,
                         fontSize = 18.sp,
@@ -201,13 +208,14 @@ fun BottomBar(onExit: () -> Unit, displayReset: Boolean, onResetClick: () -> Uni
                     .width(128.dp)
                     .height(46.dp),
                 shape = RoundedCornerShape(15),
-                colors = ButtonDefaults.buttonColors(containerColor = Blue80)
+                //colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
+                colors = ButtonDefaults.buttonColors(containerColor = if (isSystemInDarkTheme()) Blue60 else Blue80),
             ) {
                 Text(
                     text = "Exit",
                     style = MaterialTheme.typography.labelMedium,
                     //color = MaterialTheme.colorScheme.onPrimary,
-                    color = Color.White,
+                    color = if (isSystemInDarkTheme()) Color.Black else Color.White,
                     fontSize = 18.sp,
                     modifier = Modifier
                         .wrapContentHeight(),
@@ -225,7 +233,9 @@ fun BottomBar(onExit: () -> Unit, displayReset: Boolean, onResetClick: () -> Uni
 @Preview
 @Composable
 fun PreviewBottomBar() {
-    BottomBar(onExit = {}, true, onResetClick = {})
+    PickFirstPlayerTheme {
+        BottomBar(onExit = {}, true, onResetClick = {})
+    }
 }
 
 @Composable
@@ -241,7 +251,7 @@ fun MainLayout(onNumberClick: (Int) -> Unit) {
             Text(
                 text = "Tap the number of players.",
                 //color = MaterialTheme.colorScheme.secondary,
-                color = Color.Black,
+                color = if (isSystemInDarkTheme()) Color.White else Color.Black,
                 textAlign = TextAlign.Center,
                 //style = MaterialTheme.typography.bodyMedium,
                 fontFamily = Lato,
@@ -249,7 +259,7 @@ fun MainLayout(onNumberClick: (Int) -> Unit) {
                 lineHeight = 28.sp,
                 //modifier = Modifier.padding(horizontal = 12.dp),
             )
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(40.dp))
             ButtonGrid(onNumberClick)
         }
     }
@@ -258,77 +268,56 @@ fun MainLayout(onNumberClick: (Int) -> Unit) {
 @Preview
 @Composable
 fun PreviewMainLayout() {
-    MainLayout(onNumberClick = {})
-}
-
-@Composable
-fun ButtonRow(numbers: List<Int>, onNumberClick: (Int) -> Unit) {
-    Row {
-        NumberButton(value = numbers[0], onNumberClick)
-        Spacer(
-            modifier = Modifier.padding(
-                horizontal = 16.dp,
-            )
-        )
-        NumberButton(value = numbers[1], onNumberClick)
-        Spacer(modifier = Modifier.padding(horizontal = 8.dp))
+    PickFirstPlayerTheme {
+        MainLayout(onNumberClick = {})
     }
-}
-
-@Preview
-@Composable
-fun PreviewButtonRow() {
-    ButtonRow(numbers = listOf(3, 4), onNumberClick = {})
 }
 
 @Composable
 fun ButtonGrid(onNumberClick: (Int) -> Unit) {
-    val numbers = listOf(2, 3, 4, 5, 6, 7)
+    val numbers = (2..7).map { it.toString() }
 
-    //LazyVerticalGrid(columns = 2, content = {})
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.fillMaxWidth()
+    LazyVerticalGrid(
+        columns = GridCells.Adaptive(138.dp),
     ) {
-        ButtonRow(numbers = listOf(numbers[0], numbers[1]), onNumberClick)
-        Spacer(
-            modifier = Modifier.padding(
-                vertical = 8.dp,
-            )
-        )
-        ButtonRow(numbers = listOf(numbers[2], numbers[3]), onNumberClick)
-        Spacer(
-            modifier = Modifier.padding(
-                vertical = 8.dp,
-            )
-        )
-        ButtonRow(numbers = listOf(numbers[4], numbers[5]), onNumberClick)
+        items(numbers.size) { index ->
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                NumberButton(value = numbers[index].toInt(), onNumberClick)
+                Spacer(
+                    modifier = Modifier
+                        .height(16.dp)
+                )
+            }
+        }
     }
 }
 
 @Preview
 @Composable
 fun PreviewButtonGrid() {
-    ButtonGrid(onNumberClick = {})
+    PickFirstPlayerTheme {
+        ButtonGrid(onNumberClick = {})
+    }
 }
 
 @Composable
 fun NumberButton(value: Int, onNumberClick: (Int) -> Unit) {
-    Spacer(modifier = Modifier.padding(horizontal = 8.dp))
     Button(
         onClick = { onNumberClick(value) },
         shape = RoundedCornerShape(15),
         colors = ButtonDefaults.buttonColors(
             //containerColor = MaterialTheme.colorScheme.primary,
-            containerColor = Blue20,
-        )
+            containerColor = if (isSystemInDarkTheme()) Blue80 else Blue20,
+        ),
     ) {
         Text(
             text = value.toString(),
             //color = MaterialTheme.colorScheme.secondary,
-            color = Color.Black,
+            color = if (isSystemInDarkTheme()) Color.White else Color.Black,
             modifier = Modifier
-                .height(89.dp)
+                .height(96.dp)
                 .width(72.dp)
                 .wrapContentHeight(),
             //style = MaterialTheme.typography.displayLarge,
@@ -343,7 +332,9 @@ fun NumberButton(value: Int, onNumberClick: (Int) -> Unit) {
 @Preview
 @Composable
 fun PreviewNumberButton() {
-    NumberButton(value = 7, onNumberClick = {})
+    PickFirstPlayerTheme {
+        NumberButton(value = 7, onNumberClick = {})
+    }
 }
 
 @Composable
@@ -351,8 +342,8 @@ fun ChosenValue(maxValue: Int) {
     Surface {
         Text(
             text = "Number of players: $maxValue",
-            //color = MaterialTheme.colorScheme.primary,
-            color = Color.Black,
+            //color = MaterialTheme.colorScheme.secondary,
+            color = if (isSystemInDarkTheme()) Color.White else Color.Black,
             style = MaterialTheme.typography.bodyMedium,
             //modifier = Modifier.padding(horizontal = 48.dp),
         )
@@ -363,11 +354,13 @@ fun ChosenValue(maxValue: Int) {
 @Preview
 @Composable
 fun PreviewChosenValue() {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.fillMaxWidth(),
-    ) {
-        ChosenValue(maxValue = 5)
+    PickFirstPlayerTheme {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.fillMaxWidth(),
+        ) {
+            ChosenValue(maxValue = 5)
+        }
     }
 }
 
@@ -401,7 +394,7 @@ fun PlayerDirection(direction: String, places: Int) {
             Text(
                 text = "$places",
                 //color = MaterialTheme.colorScheme.secondary,
-                color = Color.Black,
+                color = if (isSystemInDarkTheme()) Color.White else Color.Black,
                 style = MaterialTheme.typography.displayLarge,
             )
         }
@@ -416,7 +409,7 @@ fun PlayerDirection(direction: String, places: Int) {
         fontSize = 28.sp,
         lineHeight = 36.sp,
         //color = MaterialTheme.colorScheme.secondary,
-        color = Color.Black,
+        color = if (isSystemInDarkTheme()) Color.White else Color.Black,
         textAlign = TextAlign.Center,
     )
 }
@@ -424,44 +417,52 @@ fun PlayerDirection(direction: String, places: Int) {
 @Preview
 @Composable
 fun PreviewPlayerDirectionLeft() {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.fillMaxWidth(),
-    ) {
-        PlayerDirection("left", 2)
+    PickFirstPlayerTheme {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.fillMaxWidth(),
+        ) {
+            PlayerDirection("left", 2)
+        }
     }
 }
 
 @Preview
 @Composable
 fun PreviewPlayerDirectionRight() {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.fillMaxWidth(),
-    ) {
-        PlayerDirection("right", 3)
+    PickFirstPlayerTheme {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.fillMaxWidth(),
+        ) {
+            PlayerDirection("right", 3)
+        }
     }
 }
 
 @Preview
 @Composable
 fun PreviewPlayerDirectionOther() {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.fillMaxWidth(),
-    ) {
-        PlayerDirection("other", 1)
+    PickFirstPlayerTheme {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.fillMaxWidth(),
+        ) {
+            PlayerDirection("other", 1)
+        }
     }
 }
 
 @Preview
 @Composable
 fun PreviewPlayerDirectionSelf() {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.fillMaxWidth(),
-    ) {
-        PlayerDirection("self", 0)
+    PickFirstPlayerTheme {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.fillMaxWidth(),
+        ) {
+            PlayerDirection("self", 0)
+        }
     }
 }
 
@@ -483,5 +484,7 @@ fun ResultScreen(maxValue: Int, direction: String, places: Int) {
 @Preview
 @Composable
 fun PreviewResultScreen() {
-    ResultScreen(maxValue = 6, direction = "left", places = 3)
+    PickFirstPlayerTheme {
+        ResultScreen(maxValue = 6, direction = "left", places = 3)
+    }
 }
