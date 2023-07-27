@@ -307,9 +307,7 @@ fun MainLayout(onNumberClick: (Int) -> Unit) {
                 fontFamily = Lato,
                 fontSize = 28.sp,
                 lineHeight = 28.sp,
-                //modifier = Modifier.padding(horizontal = 12.dp),
             )
-            Spacer(modifier = Modifier.height(40.dp))
             ButtonGrid(onNumberClick)
         }
     }
@@ -337,11 +335,11 @@ fun ButtonGrid(onNumberClick: (Int) -> Unit) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                NumberButton(value = numbers[index].toInt(), onNumberClick)
                 Spacer(
                     modifier = Modifier
-                        .height(16.dp)
+                        .height(24.dp)
                 )
+                NumberButton(value = numbers[index].toInt(), onNumberClick)
             }
         }
     }
