@@ -278,7 +278,7 @@ fun ButtonGrid(onNumberClick: (Int) -> Unit) {
     val numbers = (2..7).map { it.toString() }
 
     LazyVerticalGrid(
-        columns = GridCells.Adaptive(128.dp),
+        columns = GridCells.Adaptive(138.dp),
     ) {
         items(numbers.size) { index ->
             Column(
@@ -288,7 +288,6 @@ fun ButtonGrid(onNumberClick: (Int) -> Unit) {
                 Spacer(
                     modifier = Modifier
                         .height(16.dp)
-                        .width(16.dp)
                 )
             }
         }
