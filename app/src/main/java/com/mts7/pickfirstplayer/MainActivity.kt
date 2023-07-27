@@ -404,21 +404,23 @@ fun PlayerDirection(direction: String, places: Int) {
         else -> 180.0F
     }
 
+    val isVertical = places == 0 || direction == "other"
+
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier.padding(
             horizontal = 24.dp,
-            vertical = if (places == 0 || direction == "other") 24.dp else 0.dp
+            vertical = if (isVertical) 8.dp else 0.dp
         )
     ) {
         Image(
             painter = painterResource(id = R.drawable.back_arrow),
-            contentDescription = "<a href=\"https://www.freepik.com/icon/right-arrow_44621\">Icon by Freepik</a>",
+            contentDescription = "Back arrow from Nikita Gohel",
             modifier = Modifier
                 .size(64.dp)
                 .rotate(rotation)
         )
-        if (places > 0 && direction != "other") {
+        if (!isVertical) {
             Spacer(
                 modifier = Modifier.width(24.dp)
             )
@@ -433,8 +435,8 @@ fun PlayerDirection(direction: String, places: Int) {
     Text(
         text = getRelationalWording(direction, places),
         modifier = Modifier
-            .padding(24.dp)
-            .width(248.dp),
+            .width(256.dp)
+            .height(72.dp),
         //style = MaterialTheme.typography.bodyMedium,
         fontFamily = Lato,
         fontSize = 28.sp,
