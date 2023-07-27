@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -149,6 +150,7 @@ fun MainScreen(
         // unsure of what to do with the unused variable
         contentPadding
         val configuration = LocalConfiguration.current
+        val isPortrait = configuration.orientation == Configuration.ORIENTATION_PORTRAIT
 
         if (numberOfPlayers > 0) {
             val (direction, places) = getRelationalValues(
@@ -160,10 +162,10 @@ fun MainScreen(
                 direction = direction,
                 places = places,
                 refreshSelection = onRefresh,
-                isPortrait = configuration.orientation == Configuration.ORIENTATION_PORTRAIT,
+                isPortrait = isPortrait,
             )
         } else {
-            MainLayout(onNumberClick = { updateNumber(it) })
+            MainLayout(onNumberClick = { updateNumber(it) }, isPortrait = isPortrait)
         }
     }
 }
@@ -293,7 +295,7 @@ fun PreviewBottomBarWithoutReset() {
 }
 
 @Composable
-fun MainLayout(onNumberClick: (Int) -> Unit) {
+fun MainLayout(onNumberClick: (Int) -> Unit, isPortrait: Boolean) {
     Surface(
         modifier = Modifier.clip(RoundedCornerShape(15))
     ) {
@@ -312,6 +314,9 @@ fun MainLayout(onNumberClick: (Int) -> Unit) {
                 fontSize = 28.sp,
                 lineHeight = 28.sp,
             )
+            if (isPortrait) {
+                Spacer(modifier = Modifier.height(16.dp))
+            }
             ButtonGrid(onNumberClick)
         }
     }
@@ -319,9 +324,17 @@ fun MainLayout(onNumberClick: (Int) -> Unit) {
 
 @Preview
 @Composable
-fun PreviewMainLayout() {
+fun PreviewMainLayoutPortrait() {
     PickFirstPlayerTheme {
-        MainLayout(onNumberClick = {})
+        MainLayout(onNumberClick = {}, isPortrait = true)
+    }
+}
+
+@Preview
+@Composable
+fun PreviewMainLayoutLandscape() {
+    PickFirstPlayerTheme {
+        MainLayout(onNumberClick = {}, isPortrait = false)
     }
 }
 
@@ -536,12 +549,17 @@ fun ResultScreen(
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.SpaceEvenly,
     ) {
-        Spacer(modifier = Modifier.height(100.dp))
+        if (!isPortrait) {
+            Spacer(modifier = Modifier.height(100.dp))
+        }
         ChosenValue(maxValue)
-        Spacer(modifier = Modifier.height(if (isPortrait) 80.dp else 16.dp))
         PlayerDirection(direction, places, refreshSelection)
+        if (!isPortrait) {
+            Spacer(modifier = Modifier.height(100.dp))
+        }
     }
 }
 
