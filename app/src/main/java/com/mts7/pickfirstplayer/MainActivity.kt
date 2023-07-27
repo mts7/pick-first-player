@@ -1,5 +1,6 @@
 package com.mts7.pickfirstplayer
 
+import android.content.res.Configuration
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.OnBackPressedCallback
@@ -9,7 +10,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -37,6 +37,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -69,7 +70,7 @@ class MainActivity : ComponentActivity() {
                     onExit = { exitApplication() },
                     onRefresh = {
                         setRandomPlayer(player, numberOfPlayers.value)
-                    }
+                    },
                 )
             }
 
@@ -134,7 +135,7 @@ fun MainScreen(
     player: Int,
     updateNumber: (Int) -> Unit,
     onExit: () -> Unit,
-    onRefresh: () -> Unit
+    onRefresh: () -> Unit,
 ) {
     Scaffold(
         topBar = { TopBar() },
@@ -147,6 +148,8 @@ fun MainScreen(
     ) { contentPadding ->
         // unsure of what to do with the unused variable
         contentPadding
+        val configuration = LocalConfiguration.current
+
         if (numberOfPlayers > 0) {
             val (direction, places) = getRelationalValues(
                 numberOfPlayers,
@@ -157,6 +160,7 @@ fun MainScreen(
                 direction = direction,
                 places = places,
                 refreshSelection = onRefresh,
+                isPortrait = configuration.orientation == Configuration.ORIENTATION_PORTRAIT,
             )
         } else {
             MainLayout(onNumberClick = { updateNumber(it) })
@@ -399,7 +403,6 @@ fun ChosenValue(maxValue: Int) {
             //modifier = Modifier.padding(horizontal = 48.dp),
         )
     }
-    Spacer(modifier = Modifier.height(48.dp))
 }
 
 @Preview
@@ -457,7 +460,7 @@ fun PlayerDirection(direction: String, places: Int, refreshSelection: () -> Unit
     Text(
         text = getRelationalWording(direction, places),
         modifier = Modifier
-            .width(256.dp)
+            .padding(horizontal = 64.dp)
             .height(72.dp),
         //style = MaterialTheme.typography.bodyMedium,
         fontFamily = Lato,
@@ -522,24 +525,48 @@ fun PreviewPlayerDirectionSelf() {
 }
 
 @Composable
-fun ResultScreen(maxValue: Int, direction: String, places: Int, refreshSelection: () -> Unit) {
+fun ResultScreen(
+    maxValue: Int,
+    direction: String,
+    places: Int,
+    refreshSelection: () -> Unit,
+    isPortrait: Boolean
+) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.fillMaxWidth(),
     ) {
         Spacer(modifier = Modifier.height(100.dp))
         ChosenValue(maxValue)
-        Spacer(
-            modifier = Modifier.height(32.dp)
-        )
+        Spacer(modifier = Modifier.height(if (isPortrait) 80.dp else 16.dp))
         PlayerDirection(direction, places, refreshSelection)
     }
 }
 
 @Preview
 @Composable
-fun PreviewResultScreen() {
+fun PreviewResultScreenPortrait() {
     PickFirstPlayerTheme {
-        ResultScreen(maxValue = 6, direction = "left", places = 3, refreshSelection = {})
+        ResultScreen(
+            maxValue = 6,
+            direction = "left",
+            places = 3,
+            refreshSelection = {},
+            isPortrait = true
+        )
+    }
+}
+
+@Preview
+@Composable
+fun PreviewResultScreenLandscape() {
+    PickFirstPlayerTheme {
+        ResultScreen(
+            maxValue = 6,
+            direction = "left",
+            places = 3,
+            refreshSelection = {},
+            isPortrait = false
+        )
     }
 }
