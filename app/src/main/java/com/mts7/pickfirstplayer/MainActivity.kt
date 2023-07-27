@@ -64,6 +64,8 @@ class MainActivity : ComponentActivity() {
                 override fun handleOnBackPressed() {
                     if (numberOfPlayers.value > 0) {
                         numberOfPlayers.value = 0
+                    } else {
+                        exitApplication()
                     }
                 }
             })
