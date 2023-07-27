@@ -89,7 +89,7 @@ class MainActivity : ComponentActivity() {
         exitProcess(0)
     }
 
-    fun setRandomPlayer(player: MutableState<Int>, maxPlayers: Int) {
+    private fun setRandomPlayer(player: MutableState<Int>, maxPlayers: Int) {
         player.value = (1..maxPlayers).random()
     }
 }
