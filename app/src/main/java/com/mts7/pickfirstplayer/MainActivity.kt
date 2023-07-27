@@ -61,7 +61,9 @@ class MainActivity : ComponentActivity() {
                     player.value,
                     updateNumber = {
                         numberOfPlayers.value = it
-                        setRandomPlayer(player, numberOfPlayers.value)
+                        if (it > 0) {
+                            setRandomPlayer(player, numberOfPlayers.value)
+                        }
                     },
                     onExit = { exitApplication() },
                     onRefresh = {
