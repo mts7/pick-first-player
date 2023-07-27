@@ -142,7 +142,7 @@ fun PreviewMainScreen() {
 fun TopBar() {
     Surface(
         //color = MaterialTheme.colorScheme.tertiary,
-        color = Blue60,
+        color = if (isSystemInDarkTheme()) Blue80 else Blue60,
         modifier = Modifier
             .fillMaxWidth(),
     ) {
@@ -172,7 +172,7 @@ fun PreviewTopBar() {
 fun BottomBar(onExit: () -> Unit, displayReset: Boolean, onResetClick: () -> Unit) {
     Surface(
         //color = MaterialTheme.colorScheme.tertiary,
-        color = Blue60,
+        color = if (isSystemInDarkTheme()) Blue80 else Blue60,
         modifier = Modifier.fillMaxWidth()
     ) {
         Row(
@@ -183,7 +183,7 @@ fun BottomBar(onExit: () -> Unit, displayReset: Boolean, onResetClick: () -> Uni
                 ElevatedButton(
                     onClick = onResetClick,
                     //colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
-                    colors = ButtonDefaults.buttonColors(containerColor = Blue80),
+                    colors = ButtonDefaults.buttonColors(containerColor = if (isSystemInDarkTheme()) Blue60 else Blue80),
                     shape = RoundedCornerShape(15),
                     modifier = Modifier
                         .width(128.dp)
@@ -209,7 +209,7 @@ fun BottomBar(onExit: () -> Unit, displayReset: Boolean, onResetClick: () -> Uni
                     .height(46.dp),
                 shape = RoundedCornerShape(15),
                 //colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
-                colors = ButtonDefaults.buttonColors(containerColor = Blue80),
+                colors = ButtonDefaults.buttonColors(containerColor = if (isSystemInDarkTheme()) Blue60 else Blue80),
             ) {
                 Text(
                     text = "Exit",
@@ -310,7 +310,7 @@ fun NumberButton(value: Int, onNumberClick: (Int) -> Unit) {
         shape = RoundedCornerShape(15),
         colors = ButtonDefaults.buttonColors(
             //containerColor = MaterialTheme.colorScheme.primary,
-            containerColor = Blue20,
+            containerColor = if (isSystemInDarkTheme()) Blue80 else Blue20,
         ),
     ) {
         Text(
