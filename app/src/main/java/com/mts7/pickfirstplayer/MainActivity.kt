@@ -148,7 +148,7 @@ fun TopBar() {
                 painter = painterResource(id = R.drawable.logo_meeples),
                 contentDescription = "Pick First Player",
                 modifier = Modifier
-                    .size(120.dp)
+                    .size(96.dp)
                     .clip(RoundedCornerShape(15)),
             )
         }
@@ -178,7 +178,9 @@ fun BottomBar(onExit: () -> Unit, displayReset: Boolean, onResetClick: () -> Uni
                     onClick = onResetClick,
                     colors = ButtonDefaults.buttonColors(containerColor = Blue80),
                     shape = RoundedCornerShape(15),
-                    modifier = Modifier.width(128.dp)
+                    modifier = Modifier
+                        .width(128.dp)
+                        .height(46.dp),
                 ) {
                     Text(
                         text = "Reset",
@@ -186,8 +188,7 @@ fun BottomBar(onExit: () -> Unit, displayReset: Boolean, onResetClick: () -> Uni
                         color = Color.White,
                         //style = MaterialTheme.typography.labelMedium,
                         fontFamily = Lato,
-                        fontSize = 24.sp,
-                        lineHeight = 24.sp,
+                        fontSize = 18.sp,
                     )
                 }
                 Spacer(
@@ -207,7 +208,7 @@ fun BottomBar(onExit: () -> Unit, displayReset: Boolean, onResetClick: () -> Uni
                     style = MaterialTheme.typography.labelMedium,
                     //color = MaterialTheme.colorScheme.onPrimary,
                     color = Color.White,
-                    fontSize = 24.sp,
+                    fontSize = 18.sp,
                     modifier = Modifier
                         .wrapContentHeight(),
                 )
@@ -239,7 +240,8 @@ fun MainLayout(onNumberClick: (Int) -> Unit) {
             Spacer(modifier = Modifier.height(144.dp))
             Text(
                 text = "Tap the number of players.",
-                color = MaterialTheme.colorScheme.secondary,
+                //color = MaterialTheme.colorScheme.secondary,
+                color = Color.Black,
                 textAlign = TextAlign.Center,
                 //style = MaterialTheme.typography.bodyMedium,
                 fontFamily = Lato,
@@ -349,7 +351,8 @@ fun ChosenValue(maxValue: Int) {
     Surface {
         Text(
             text = "Number of players: $maxValue",
-            color = MaterialTheme.colorScheme.primary,
+            //color = MaterialTheme.colorScheme.primary,
+            color = Color.Black,
             style = MaterialTheme.typography.bodyMedium,
             //modifier = Modifier.padding(horizontal = 48.dp),
         )
@@ -397,7 +400,8 @@ fun PlayerDirection(direction: String, places: Int) {
             )
             Text(
                 text = "$places",
-                color = MaterialTheme.colorScheme.primary,
+                //color = MaterialTheme.colorScheme.secondary,
+                color = Color.Black,
                 style = MaterialTheme.typography.displayLarge,
             )
         }
@@ -406,12 +410,13 @@ fun PlayerDirection(direction: String, places: Int) {
         text = getRelationalWording(direction, places),
         modifier = Modifier
             .padding(24.dp)
-            .width(240.dp),
+            .width(248.dp),
         //style = MaterialTheme.typography.bodyMedium,
         fontFamily = Lato,
         fontSize = 28.sp,
         lineHeight = 36.sp,
-        color = MaterialTheme.colorScheme.primary,
+        //color = MaterialTheme.colorScheme.secondary,
+        color = Color.Black,
         textAlign = TextAlign.Center,
     )
 }
@@ -424,6 +429,17 @@ fun PreviewPlayerDirectionLeft() {
         modifier = Modifier.fillMaxWidth(),
     ) {
         PlayerDirection("left", 2)
+    }
+}
+
+@Preview
+@Composable
+fun PreviewPlayerDirectionRight() {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.fillMaxWidth(),
+    ) {
+        PlayerDirection("right", 3)
     }
 }
 
