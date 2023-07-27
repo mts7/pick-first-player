@@ -5,15 +5,6 @@ import org.junit.Test
 
 internal class MainActivityTest {
     @Test
-    fun generateRandomNumberReturnsAValidNumber() {
-        val maxValue = 3
-        val number = generateRandomNumber(maxValue)
-
-        assert(number >= 1)
-        assert(number <= maxValue)
-    }
-
-    @Test
     fun getRelationalValuesWithSixPlayersSelectOne() {
         val maxCount = 6
         val player = 1

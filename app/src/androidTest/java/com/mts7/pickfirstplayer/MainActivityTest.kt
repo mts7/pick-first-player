@@ -109,7 +109,7 @@ class MainActivityTest {
     fun playerDirection_rotationLeft() {
         val direction = "left"
         val places = 2
-        rule.setContent { PlayerDirection(direction, places) }
+        rule.setContent { PlayerDirection(direction, places, refreshSelection = {}) }
 
         rule.onNode(hasContentDescription("Back arrow", true))
             .assertExists()
@@ -121,7 +121,7 @@ class MainActivityTest {
     fun playerDirection_placesZero() {
         val direction = "self"
         val places = 0
-        rule.setContent { PlayerDirection(direction, places) }
+        rule.setContent { PlayerDirection(direction, places, refreshSelection = {}) }
 
         rule.onNode(hasText("$places"))
             .assertDoesNotExist()
@@ -131,7 +131,7 @@ class MainActivityTest {
     fun playerDirection_placesOneOther() {
         val direction = "other"
         val places = 1
-        rule.setContent { PlayerDirection(direction, places) }
+        rule.setContent { PlayerDirection(direction, places, refreshSelection = {}) }
 
         rule.onNode(hasText("The other player goes first."))
             .assertExists()
@@ -141,7 +141,7 @@ class MainActivityTest {
     fun playerDirection_placesTwo() {
         val direction = "right"
         val places = 2
-        rule.setContent { PlayerDirection(direction, places) }
+        rule.setContent { PlayerDirection(direction, places, refreshSelection = {}) }
 
         rule.onNode(
             hasText("$places") and hasParent(
@@ -160,7 +160,7 @@ class MainActivityTest {
     fun playerDirection_hasWording() {
         val direction = "left"
         val places = 1
-        rule.setContent { PlayerDirection(direction, places) }
+        rule.setContent { PlayerDirection(direction, places, refreshSelection = {}) }
 
         rule.onNode(hasText("The player on your $direction goes first."))
             .assertExists()
