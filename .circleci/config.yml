@@ -10,7 +10,7 @@ executors:
       - image: cimg/android:2023.07
   ubuntu:
     docker:
-      - image: cimg/base
+      - image: cimg/deploy
 
 jobs:
   build:
