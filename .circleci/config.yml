@@ -8,6 +8,9 @@ executors:
   android:
     docker:
       - image: cimg/android:2023.07
+  ubuntu:
+    docker:
+      - image: cimg/base:2023:08
 
 jobs:
   build:
@@ -24,17 +27,15 @@ jobs:
       - store_artifacts:
           path: app/build/outputs/apk/debug/app-debug.apk
   deploy:
-    executor: android
+    executor: ubuntu
     steps:
       - checkout
       - run:
           name: Install Vault
           command: > 
             sudo apt update && \
-            curl -fsSL https://apt.releases.hashicorp.com/gpg | \
-            sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg && \
-            echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | \
-            sudo tee /etc/apt/sources.list.d/hashicorp.list \
+            curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg && \
+            echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list \
             sudo apt update && sudo apt install vlt -y \
             vlt
       - run: cd scripts && ./create-keystore-properties.sh
