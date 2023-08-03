@@ -3,16 +3,6 @@ plugins {
     id 'org.jetbrains.kotlin.android'
 }
 
-// Create a variable called keystorePropertiesFile, and initialize it to your
-// keystore.properties file, in the rootProject folder.
-//def keystorePropertiesFile = rootProject.file("keystore.properties")
-
-// Initialize a new Properties() object called keystoreProperties.
-//def keystoreProperties = new Properties()
-
-// Load your keystore.properties file into the keystoreProperties object.
-//keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
-
 android {
     namespace 'com.mts7.pickfirstplayer'
     compileSdk 33
@@ -29,18 +19,8 @@ android {
             useSupportLibrary true
         }
     }
-//    signingConfigs {
-//        create("release") {
-//            keyAlias keystoreProperties['keyAlias']
-//            keyPassword keystoreProperties['keyPassword']
-//            storeFile file(keystoreProperties['storeFile'])
-//            storePassword keystoreProperties['storePassword']
-//        }
-//    }
     buildTypes {
         release {
-            //signingConfig = signingConfigs.getByName("release")
-
             // Enables code shrinking, obfuscation, and optimization for only
             // your project's release build type. Make sure to use a build
             // variant with `isDebuggable=false`.
