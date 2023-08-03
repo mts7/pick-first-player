@@ -16,12 +16,12 @@ keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 android {
     namespace 'com.mts7.pickfirstplayer'
     compileSdk 33
+    compileSdkVersion 33
 
     defaultConfig {
         applicationId "com.mts7.pickfirstplayer"
         minSdk 24
         targetSdk 33
-        compileSdkVersion 33
         versionCode 1
         versionName "1.0"
 
