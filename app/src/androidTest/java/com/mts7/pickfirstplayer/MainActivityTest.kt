@@ -175,6 +175,7 @@ class MainActivityTest {
             )
         )
             .assertExists()
+            .assertHasClickAction()
     }
 
     @Test
