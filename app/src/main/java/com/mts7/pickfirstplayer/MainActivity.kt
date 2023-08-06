@@ -190,7 +190,7 @@ fun TopBar() {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Image(
-                painter = painterResource(id = R.drawable.logo),
+                painter = painterResource(id = R.drawable.logo_light),
                 contentDescription = "Pick First Player",
                 modifier = Modifier
                     .size(72.dp)
