@@ -144,7 +144,8 @@ fun MainScreen(
             BottomBar(
                 onExit = onExit,
                 displayReset = numberOfPlayers > 0,
-                onResetClick = { updateNumber(0) })
+                onResetClick = { updateNumber(0) },
+            )
         },
     ) { contentPadding ->
         // unsure of what to do with the unused variable
@@ -209,7 +210,11 @@ fun PreviewTopBar() {
 }
 
 @Composable
-fun BottomBar(onExit: () -> Unit, displayReset: Boolean, onResetClick: () -> Unit) {
+fun BottomBar(
+    onExit: () -> Unit,
+    displayReset: Boolean,
+    onResetClick: () -> Unit,
+) {
     Surface(
         //color = MaterialTheme.colorScheme.tertiary,
         color = if (isSystemInDarkTheme()) Blue80 else Blue60,
@@ -272,7 +277,8 @@ fun BottomBar(onExit: () -> Unit, displayReset: Boolean, onResetClick: () -> Uni
             Image(
                 painter = painterResource(id = R.drawable.mts7_logo_black_192),
                 contentDescription = "mts7 logo",
-                modifier = Modifier.size(48.dp)
+                modifier = Modifier
+                    .size(48.dp),
             )
         }
     }
