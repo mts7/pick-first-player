@@ -1,8 +1,6 @@
 package com.mts7.pickfirstplayer
 
-import android.content.Intent
 import android.content.res.Configuration
-import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.OnBackPressedCallback
@@ -41,7 +39,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -99,16 +96,6 @@ class MainActivity : ComponentActivity() {
         player.value = (1..maxPlayers).random()
     }
 }
-
-//@Composable
-//fun ClickDonate() {
-//    val context = LocalContext.current
-//    val urlIntent = Intent(
-//        Intent.ACTION_VIEW,
-//        Uri.parse("https://www.paypal.com/donate/?hosted_button_id=ZNB83KNCMLDCA")
-//    )
-//    context.startActivity(urlIntent)
-//}
 
 fun getRelationalValues(maxCount: Int, player: Int): Pair<String, Int> {
     if (player == 1) {
