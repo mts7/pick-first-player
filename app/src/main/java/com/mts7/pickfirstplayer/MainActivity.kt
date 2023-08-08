@@ -1,6 +1,8 @@
 package com.mts7.pickfirstplayer
 
+import android.content.Intent
 import android.content.res.Configuration
+import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.OnBackPressedCallback
@@ -39,6 +41,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -97,6 +100,16 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+//@Composable
+//fun ClickDonate() {
+//    val context = LocalContext.current
+//    val urlIntent = Intent(
+//        Intent.ACTION_VIEW,
+//        Uri.parse("https://www.paypal.com/donate/?hosted_button_id=ZNB83KNCMLDCA")
+//    )
+//    context.startActivity(urlIntent)
+//}
+
 fun getRelationalValues(maxCount: Int, player: Int): Pair<String, Int> {
     if (player == 1) {
         return Pair("self", 0)
@@ -144,7 +157,8 @@ fun MainScreen(
             BottomBar(
                 onExit = onExit,
                 displayReset = numberOfPlayers > 0,
-                onResetClick = { updateNumber(0) })
+                onResetClick = { updateNumber(0) },
+            )
         },
     ) { contentPadding ->
         // unsure of what to do with the unused variable
@@ -209,7 +223,11 @@ fun PreviewTopBar() {
 }
 
 @Composable
-fun BottomBar(onExit: () -> Unit, displayReset: Boolean, onResetClick: () -> Unit) {
+fun BottomBar(
+    onExit: () -> Unit,
+    displayReset: Boolean,
+    onResetClick: () -> Unit,
+) {
     Surface(
         //color = MaterialTheme.colorScheme.tertiary,
         color = if (isSystemInDarkTheme()) Blue80 else Blue60,
@@ -272,7 +290,8 @@ fun BottomBar(onExit: () -> Unit, displayReset: Boolean, onResetClick: () -> Uni
             Image(
                 painter = painterResource(id = R.drawable.mts7_logo_black_192),
                 contentDescription = "mts7 logo",
-                modifier = Modifier.size(48.dp)
+                modifier = Modifier
+                    .size(48.dp),
             )
         }
     }
