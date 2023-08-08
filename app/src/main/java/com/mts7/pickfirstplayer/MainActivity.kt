@@ -190,7 +190,7 @@ fun TopBar() {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Image(
-                painter = painterResource(id = R.drawable.logo),
+                painter = painterResource(id = R.drawable.logo_light),
                 contentDescription = "Pick First Player",
                 modifier = Modifier
                     .size(72.dp)
@@ -444,14 +444,19 @@ fun PlayerDirection(direction: String, places: Int, refreshSelection: () -> Unit
 
     val isVertical = places == 0 || direction == "other"
 
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
+    Button(
         modifier = Modifier
             .padding(
                 horizontal = 24.dp,
                 vertical = if (isVertical) 8.dp else 0.dp
             )
             .clickable { refreshSelection() },
+        shape = RoundedCornerShape(15),
+        colors = ButtonDefaults.buttonColors(
+            //containerColor = MaterialTheme.colorScheme.primary,
+            containerColor = if (isSystemInDarkTheme()) Blue80 else Blue20,
+        ),
+        onClick = refreshSelection,
     ) {
         Image(
             painter = painterResource(id = if (isSystemInDarkTheme()) R.drawable.white_arrow else R.drawable.black_arrow),
