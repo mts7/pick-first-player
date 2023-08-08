@@ -5,14 +5,18 @@ plugins {
 
 android {
     namespace 'com.mts7.pickfirstplayer'
-    compileSdk 34
+    compileSdk 33
 
     defaultConfig {
         applicationId "com.mts7.pickfirstplayer"
         minSdk 24
-        targetSdk 34
-        versionCode 4
+        targetSdk 33
+        versionCode 5
         versionName "0.7.1"
+
+        ndk {
+            debugSymbolLevel 'FULL'
+        }
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
