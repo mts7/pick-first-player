@@ -32,7 +32,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -55,8 +55,8 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            val numberOfPlayers = remember { mutableStateOf(0) }
-            val player = remember { mutableStateOf(0) }
+            val numberOfPlayers = rememberSaveable { mutableStateOf(0) }
+            val player = rememberSaveable { mutableStateOf(0) }
 
             PickFirstPlayerTheme {
                 MainScreen(
