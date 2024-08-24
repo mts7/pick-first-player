@@ -1,13 +1,13 @@
 version: 2.1
 
 orbs:
-  android: circleci/android@2.3.0
+  android: circleci/android@2.5.0
   gradle: circleci/gradle@3.0
 
 executors:
   android:
     docker:
-      - image: cimg/android:2023.08
+      - image: cimg/android:2024.08
 
 jobs:
   build:
@@ -36,5 +36,5 @@ workflows:
           test_command: test --stacktrace
           test_results_path: app/build/reports/tests
       - android/run-ui-tests:
-          executor: { name: android/android-machine, tag: 2023.07.1 }
+          executor: { name: android/android-machine, tag: 2024.08.1 }
           test-command: ./gradlew connectedAndroidTest
