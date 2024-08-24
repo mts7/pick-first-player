@@ -1,17 +1,22 @@
 package com.mts7.pickfirstplayer
 
 import android.content.res.Configuration
+import android.content.res.Configuration.ORIENTATION_PORTRAIT
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -342,23 +347,39 @@ fun PreviewMainLayoutLandscape() {
 fun ButtonGrid(onNumberClick: (Int) -> Unit) {
     val numbers = (2..7).map { it.toString() }
 
+    // TODO: determine number of columns based on width
+    val orientation = LocalConfiguration.current.orientation
+    val screenWidth = LocalConfiguration.current.screenWidthDp
+    var columnCount = 2
+    if (orientation != ORIENTATION_PORTRAIT) {
+        columnCount = screenWidth / 200
+    }
+
     Row(
         horizontalArrangement = Arrangement.SpaceEvenly,
     ) {
-        Spacer(modifier = Modifier.width(16.dp))
         LazyVerticalGrid(
-            columns = GridCells.Adaptive(138.dp),
+            columns = GridCells.Fixed(columnCount),
 //        contentPadding = PaddingValues(
 //            horizontal = 24.dp
 //        ),
         ) {
             items(numbers.size) { index ->
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
+                Box(
+                    modifier = Modifier
+                        .aspectRatio(1f)
+                        .background(color = Color.Gray)
+                        //.padding(20.dp)
+                        .fillMaxWidth()
                 ) {
-                    Spacer(modifier = Modifier.height(24.dp))
                     NumberButton(value = numbers[index].toInt(), onNumberClick)
                 }
+//                Column(
+//                    horizontalAlignment = Alignment.CenterHorizontally,
+//                ) {
+//                    Spacer(modifier = Modifier.height(24.dp))
+//                    NumberButton(value = numbers[index].toInt(), onNumberClick)
+//                }
             }
         }
     }
