@@ -1,18 +1,19 @@
 plugins {
     id 'com.android.application'
-    id 'org.jetbrains.kotlin.android'
+    id 'org.jetbrains.kotlin.android' version '2.1.20'
+    id 'org.jetbrains.kotlin.plugin.compose' version '2.0.0'
 }
 
 android {
     namespace 'com.mts7.pickfirstplayer'
-    compileSdk 34
+    compileSdk 35
 
     defaultConfig {
         applicationId "com.mts7.pickfirstplayer"
         minSdk 24
-        targetSdk 34
+        targetSdk 35
         versionCode 7
-        versionName "0.7.3"
+        versionName "0.7.4"
 
         ndk {
             debugSymbolLevel 'FULL'
@@ -66,21 +67,21 @@ android {
 
 dependencies {
 
-    implementation 'androidx.core:core-ktx:1.13.1'
-    implementation platform('org.jetbrains.kotlin:kotlin-bom:1.8.0')
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.8.4'
-    implementation 'androidx.activity:activity-compose:1.9.1'
-    implementation platform('androidx.compose:compose-bom:2024.08.00')
+    implementation 'androidx.activity:activity-compose:1.10.1'
+    implementation 'androidx.compose.compiler:compiler:1.5.15'
+    implementation 'androidx.compose.material3:material3'
     implementation 'androidx.compose.ui:ui'
     implementation 'androidx.compose.ui:ui-graphics'
     implementation 'androidx.compose.ui:ui-tooling-preview'
-    implementation 'androidx.compose.material3:material3'
-    implementation 'androidx.core:core-ktx:1.13.1'
+    implementation 'androidx.core:core-ktx:1.16.0'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.8.7'
+    implementation platform('androidx.compose:compose-bom:2025.04.00')
+    implementation platform('org.jetbrains.kotlin:kotlin-bom:1.9.0')
     testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.2.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'
-    androidTestImplementation platform('androidx.compose:compose-bom:2024.08.00')
     androidTestImplementation 'androidx.compose.ui:ui-test-junit4'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'
+    androidTestImplementation 'androidx.test.ext:junit:1.2.1'
+    androidTestImplementation platform('androidx.compose:compose-bom:2025.04.00')
     debugImplementation 'androidx.compose.ui:ui-tooling'
     debugImplementation 'androidx.compose.ui:ui-test-manifest'
 }
