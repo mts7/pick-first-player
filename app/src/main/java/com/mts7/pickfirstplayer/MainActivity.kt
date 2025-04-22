@@ -31,7 +31,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -55,30 +55,30 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            val numberOfPlayers = rememberSaveable { mutableStateOf(0) }
-            val player = rememberSaveable { mutableStateOf(0) }
+            val numberOfPlayers = rememberSaveable { mutableIntStateOf(0) }
+            val player = rememberSaveable { mutableIntStateOf(0) }
 
             PickFirstPlayerTheme {
                 MainScreen(
-                    numberOfPlayers.value,
-                    player.value,
+                    numberOfPlayers.intValue,
+                    player.intValue,
                     updateNumber = {
-                        numberOfPlayers.value = it
+                        numberOfPlayers.intValue = it
                         if (it > 0) {
-                            setRandomPlayer(player, numberOfPlayers.value)
+                            setRandomPlayer(player, numberOfPlayers.intValue)
                         }
                     },
                     onExit = { exitApplication() },
                     onRefresh = {
-                        setRandomPlayer(player, numberOfPlayers.value)
+                        setRandomPlayer(player, numberOfPlayers.intValue)
                     },
                 )
             }
 
             this.onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
-                    if (numberOfPlayers.value > 0) {
-                        numberOfPlayers.value = 0
+                    if (numberOfPlayers.intValue > 0) {
+                        numberOfPlayers.intValue = 0
                     } else {
                         exitApplication()
                     }
