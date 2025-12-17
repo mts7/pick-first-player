@@ -4,10 +4,10 @@
     <selectionStates>
       <SelectionState runConfigName="app">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2024-08-24T17:04:45.831588Z">
+        <DropdownSelection timestamp="2025-12-16T23:23:47.621923Z">
           <Target type="DEFAULT_BOOT">
             <handle>
-              <DeviceId pluginId="LocalEmulator" identifier="path=/Users/mts7/.android/avd/Medium_Phone_API_VanillaIceCream.avd" />
+              <DeviceId pluginId="LocalEmulator" identifier="path=/Users/mts7/.android/avd/Galaxy_S21_Fe_API_31.avd" />
             </handle>
           </Target>
         </DropdownSelection>
