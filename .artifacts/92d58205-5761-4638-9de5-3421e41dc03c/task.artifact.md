@@ -1,0 +1,8 @@
+- [x] Create `.github/workflows` directory
+- [x] Implement `android.yml` GitHub Actions workflow
+    - [x] Define triggers for `master` and pull requests
+    - [x] Implement `verification` job (Lint & Unit Tests)
+    - [x] Implement `ui-tests` job (Instrumented Tests)
+    - [x] Implement `build` job (APK Generation, depends on others)
+- [x] Verify workflow configuration
+- [x] Create walkthrough documentation
