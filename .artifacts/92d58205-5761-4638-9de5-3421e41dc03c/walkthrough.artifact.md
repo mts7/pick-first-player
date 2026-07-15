@@ -1,25 +1,22 @@
-# Walkthrough: Migration to GitHub Actions
+# Walkthrough: Manifest and Test Fixes
 
-I have successfully migrated your CI/CD pipeline from CircleCI to GitHub Actions. The new workflow is designed for maximum reliability by ensuring that the final APK is only built after all tests pass.
+I have addressed the specific API compatibility and deprecation warnings you identified.
 
 ## Changes Made
 
-### GitHub Actions Workflow
-#### [NEW] [android.yml](file:///Users/mts7/Repositories/pick-first-player/.github/workflows/android.yml)
-Created a robust workflow file with the following features:
-- **Triggers**: Automated runs on every push to `master` and every pull request.
-- **Parallel Execution**:
-  - `verification`: Runs `./gradlew lint` and `./gradlew test` simultaneously with UI tests.
-  - `ui-tests`: Uses a Linux runner with an Android Emulator to execute `./gradlew connectedAndroidTest`.
-- **Conditional Build**:
-  - `build`: This job only starts if both `verification` and `ui-tests` pass. It generates the debug APK and uploads it as a workflow artifact.
-- **Caching**: Utilizes `gradle/actions/setup-gradle` to cache Gradle dependencies, wrappers, and build states, significantly reducing runtime.
+### Android Manifest
+#### [MODIFY] [AndroidManifest.xml](file:///Users/mts7/Repositories/pick-first-player/app/src/main/AndroidManifest.xml)
+- Updated `tools:targetApi` to `33`. This correctly informs the lint tool that the `android:enableOnBackInvokedCallback` attribute is intended for API 33 and higher, resolving the "only used in API level 33 and higher" warning.
 
-## How to Verify
-1. **Push to master**: Commit and push these changes.
-2. **Check "Actions" Tab**: Go to your GitHub repository's "Actions" tab.
-3. **Monitor Progress**: You will see the `verification` and `ui-tests` jobs running in parallel. Once they finish successfully, the `build` job will trigger.
-4. **Download APK**: After completion, click on the workflow run to find the `app-debug` artifact available for download.
+### Instrumented Tests
+#### [MODIFY] [MainActivityBackPressInstrumentedTest.kt](file:///Users/mts7/Repositories/pick-first-player/app/src/androidTest/java/com/mts7/pickfirstplayer/MainActivityBackPressInstrumentedTest.kt)
+#### [MODIFY] [MainActivityLayoutInstrumentedTest.kt](file:///Users/mts7/Repositories/pick-first-player/app/src/androidTest/java/com/mts7/pickfirstplayer/MainActivityLayoutInstrumentedTest.kt)
+#### [MODIFY] [MainActivityTest.kt](file:///Users/mts7/Repositories/pick-first-player/app/src/androidTest/java/com/mts7/pickfirstplayer/MainActivityTest.kt)
+#### [MODIFY] [MainScreenLayoutInstrumentedTest.kt](file:///Users/mts7/Repositories/pick-first-player/app/src/androidTest/java/com/mts7/pickfirstplayer/MainScreenLayoutInstrumentedTest.kt)
+- Migrated all usages of `createAndroidComposeRule` and `createComposeRule` to the `androidx.compose.ui.test.junit4.v2` package.
+- This resolves the deprecation warnings and aligns your tests with the latest Jetpack Compose testing practices, which use `StandardTestDispatcher` for more predictable coroutine behavior.
 
-> [!TIP]
-> If your project grows and you need even faster UI tests, consider exploring "Firebase Test Lab" or "Play Console Internal Sharing" actions for more advanced deployment workflows.
+## Verification Results
+
+### Automated Tests
+- Ran `:app:lintDebug` successfully. This confirms that the Manifest warning is resolved and that the code changes are syntactically correct and compatible with the project's configuration.

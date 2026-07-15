@@ -291,7 +291,7 @@ fun PreviewBottomBarWithoutReset() {
 @Composable
 fun MainLayout(onNumberClick: (Int) -> Unit, isPortrait: Boolean) {
     Surface(
-        modifier = Modifier.clip(RoundedCornerShape(15))
+        modifier = Modifier.clip(RoundedCornerShape(15)),
     ) {
         Column(
             modifier = Modifier.fillMaxWidth(),
@@ -391,7 +391,7 @@ fun NumberButton(value: Int, onNumberClick: (Int) -> Unit) {
 @Composable
 fun PreviewNumberButton() {
     PickFirstPlayerTheme {
-        NumberButton(value = 7, onNumberClick = {})
+        NumberButton(value = 7) {}
     }
 }
 
@@ -434,7 +434,7 @@ fun PlayerDirection(direction: Direction, places: Int, refreshSelection: () -> U
         modifier = Modifier
             .padding(
                 horizontal = 24.dp,
-                vertical = if (isVertical) 8.dp else 0.dp
+                vertical = if (isVertical) 8.dp else 0.dp,
             )
             .clickable { refreshSelection() },
         shape = RoundedCornerShape(15),

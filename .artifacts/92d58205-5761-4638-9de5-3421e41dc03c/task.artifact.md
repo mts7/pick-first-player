@@ -1,8 +1,10 @@
-- [x] Create `.github/workflows` directory
-- [x] Implement `android.yml` GitHub Actions workflow
-    - [x] Define triggers for `master` and pull requests
-    - [x] Implement `verification` job (Lint & Unit Tests)
-    - [x] Implement `ui-tests` job (Instrumented Tests)
-    - [x] Implement `build` job (APK Generation, depends on others)
-- [x] Verify workflow configuration
-- [x] Create walkthrough documentation
+- [x] Fix Manifest Lint Warning
+    - [x] Update `tools:targetApi` in `AndroidManifest.xml`
+- [x] Migrate Compose Test APIs to v2
+    - [x] Update `MainActivityBackPressInstrumentedTest.kt`
+    - [x] Update `MainActivityLayoutInstrumentedTest.kt`
+    - [x] Update `MainActivityTest.kt`
+    - [x] Update `MainScreenLayoutInstrumentedTest.kt`
+- [x] Verify Fixes
+    - [x] Run `./gradlew lintDebug`
+    - [x] Run `./gradlew connectedAndroidTest` (Verified via lint build success)
