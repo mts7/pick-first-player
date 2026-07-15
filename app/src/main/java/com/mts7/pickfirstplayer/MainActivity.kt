@@ -68,10 +68,9 @@ class MainActivity : ComponentActivity() {
                         }
                     },
                     onExit = { exitApplication() },
-                    onRefresh = {
-                        setRandomPlayer(player, numberOfPlayers.intValue)
-                    },
-                )
+                ) {
+                    setRandomPlayer(player, numberOfPlayers.intValue)
+                }
             }
 
             BackHandler(enabled = numberOfPlayers.intValue > 0) {
@@ -101,14 +100,14 @@ fun getRelationalValues(maxCount: Int, player: Int): Pair<Direction, Int> {
         return Pair(Direction.SELF, 0)
     }
 
-    if (maxCount == 2 && player == 2) {
+    if ((maxCount == 2) && (player == 2)) {
         return Pair(Direction.OTHER, 1)
     }
 
     val half = kotlin.math.ceil(maxCount.toDouble() / 2)
 
     if (player > half) {
-        return Pair(Direction.RIGHT, maxCount + 1 - player)
+        return Pair(Direction.RIGHT, ((maxCount + 1) - player))
     }
     return Pair(Direction.LEFT, player - 1)
 }
@@ -143,7 +142,7 @@ fun MainScreen(
             BottomBar(
                 onExit = onExit,
                 displayReset = numberOfPlayers > 0,
-                onResetClick = { updateNumber(0) })
+            ) { updateNumber(0) }
         },
     ) { contentPadding ->
         val configuration = LocalConfiguration.current
@@ -153,7 +152,7 @@ fun MainScreen(
             if (numberOfPlayers > 0) {
                 val (direction, places) = getRelationalValues(
                     numberOfPlayers,
-                    player
+                    player,
                 )
                 ResultScreen(
                     maxValue = numberOfPlayers,
@@ -173,7 +172,7 @@ fun MainScreen(
 @Composable
 fun PreviewMainScreen() {
     PickFirstPlayerTheme {
-        MainScreen(0, player = 2, updateNumber = {}, onExit = {}, onRefresh = {})
+        MainScreen(0, player = 2, updateNumber = {}, onExit = {}) {}
     }
 }
 
@@ -186,7 +185,7 @@ fun TopBar() {
             .statusBarsPadding(),
     ) {
         Column(
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Image(
                 painter = painterResource(id = R.drawable.logo_light),
@@ -213,7 +212,7 @@ fun BottomBar(onExit: () -> Unit, displayReset: Boolean, onResetClick: () -> Uni
         color = MaterialTheme.colorScheme.tertiary,
         modifier = Modifier
             .fillMaxWidth()
-            .navigationBarsPadding()
+            .navigationBarsPadding(),
     ) {
         Row(
             modifier = Modifier
@@ -237,11 +236,11 @@ fun BottomBar(onExit: () -> Unit, displayReset: Boolean, onResetClick: () -> Uni
                     )
                 }
                 Spacer(
-                    modifier = Modifier.width(16.dp)
+                    modifier = Modifier.width(16.dp),
                 )
             } else {
                 Spacer(
-                    modifier = Modifier.width(146.dp)
+                    modifier = Modifier.width(146.dp),
                 )
             }
             ElevatedButton(
@@ -262,12 +261,12 @@ fun BottomBar(onExit: () -> Unit, displayReset: Boolean, onResetClick: () -> Uni
                 )
             }
             Spacer(
-                modifier = Modifier.width(16.dp)
+                modifier = Modifier.width(16.dp),
             )
             Image(
                 painter = painterResource(id = R.drawable.mts7_logo_black_192),
                 contentDescription = "mts7 logo",
-                modifier = Modifier.size(48.dp)
+                modifier = Modifier.size(48.dp),
             )
         }
     }
@@ -277,7 +276,7 @@ fun BottomBar(onExit: () -> Unit, displayReset: Boolean, onResetClick: () -> Uni
 @Composable
 fun PreviewBottomBarWithReset() {
     PickFirstPlayerTheme {
-        BottomBar(onExit = {}, true, onResetClick = {})
+        BottomBar(onExit = {}, displayReset = true) {}
     }
 }
 
@@ -285,7 +284,7 @@ fun PreviewBottomBarWithReset() {
 @Composable
 fun PreviewBottomBarWithoutReset() {
     PickFirstPlayerTheme {
-        BottomBar(onExit = {}, false, onResetClick = {})
+        BottomBar(onExit = {}, displayReset = false) {}
     }
 }
 
@@ -360,7 +359,7 @@ fun ButtonGrid(onNumberClick: (Int) -> Unit) {
 @Composable
 fun PreviewButtonGrid() {
     PickFirstPlayerTheme {
-        ButtonGrid(onNumberClick = {})
+        ButtonGrid {}
     }
 }
 
@@ -429,7 +428,7 @@ fun PlayerDirection(direction: Direction, places: Int, refreshSelection: () -> U
         Direction.RIGHT -> 180.0F
     }
 
-    val isVertical = places == 0 || direction == Direction.OTHER
+    val isVertical = (places == 0) || (direction == Direction.OTHER)
 
     Button(
         modifier = Modifier
@@ -456,7 +455,7 @@ fun PlayerDirection(direction: Direction, places: Int, refreshSelection: () -> U
                 modifier = Modifier.width(24.dp)
             )
             Text(
-                text = "$places",
+                text = places.toString(),
                 color = MaterialTheme.colorScheme.secondary,
                 style = MaterialTheme.typography.displayLarge,
             )
@@ -482,7 +481,7 @@ fun PreviewPlayerDirectionLeft() {
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.fillMaxWidth(),
         ) {
-            PlayerDirection(Direction.LEFT, 2, refreshSelection = {})
+            PlayerDirection(Direction.LEFT, 2) {}
         }
     }
 }
@@ -495,7 +494,7 @@ fun PreviewPlayerDirectionRight() {
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.fillMaxWidth(),
         ) {
-            PlayerDirection(Direction.RIGHT, 3, refreshSelection = {})
+            PlayerDirection(Direction.RIGHT, 3) {}
         }
     }
 }
@@ -508,7 +507,7 @@ fun PreviewPlayerDirectionOther() {
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.fillMaxWidth(),
         ) {
-            PlayerDirection(Direction.OTHER, 1, refreshSelection = {})
+            PlayerDirection(Direction.OTHER, 1) {}
         }
     }
 }
@@ -521,7 +520,7 @@ fun PreviewPlayerDirectionSelf() {
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.fillMaxWidth(),
         ) {
-            PlayerDirection(Direction.SELF, 0, refreshSelection = {})
+            PlayerDirection(Direction.SELF, 0) {}
         }
     }
 }
@@ -532,7 +531,7 @@ fun ResultScreen(
     direction: Direction,
     places: Int,
     refreshSelection: () -> Unit,
-    isPortrait: Boolean
+    isPortrait: Boolean,
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -559,7 +558,7 @@ fun PreviewResultScreenPortrait() {
             direction = Direction.LEFT,
             places = 3,
             refreshSelection = {},
-            isPortrait = true
+            isPortrait = true,
         )
     }
 }
@@ -573,7 +572,7 @@ fun PreviewResultScreenLandscape() {
             direction = Direction.LEFT,
             places = 3,
             refreshSelection = {},
-            isPortrait = false
+            isPortrait = false,
         )
     }
 }
