@@ -41,17 +41,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.mts7.pickfirstplayer.ui.theme.Blue20
-import com.mts7.pickfirstplayer.ui.theme.Blue60
-import com.mts7.pickfirstplayer.ui.theme.Blue80
-import com.mts7.pickfirstplayer.ui.theme.Lato
 import com.mts7.pickfirstplayer.ui.theme.PickFirstPlayerTheme
 
 class MainActivity : ComponentActivity() {
@@ -178,8 +173,7 @@ fun PreviewMainScreen() {
 @Composable
 fun TopBar() {
     Surface(
-        //color = MaterialTheme.colorScheme.tertiary,
-        color = if (isSystemInDarkTheme()) Blue80 else Blue60,
+        color = MaterialTheme.colorScheme.tertiary,
         modifier = Modifier
             .fillMaxWidth()
             .statusBarsPadding(),
@@ -209,8 +203,7 @@ fun PreviewTopBar() {
 @Composable
 fun BottomBar(onExit: () -> Unit, displayReset: Boolean, onResetClick: () -> Unit) {
     Surface(
-        //color = MaterialTheme.colorScheme.tertiary,
-        color = if (isSystemInDarkTheme()) Blue80 else Blue60,
+        color = MaterialTheme.colorScheme.tertiary,
         modifier = Modifier
             .fillMaxWidth()
             .navigationBarsPadding()
@@ -223,8 +216,7 @@ fun BottomBar(onExit: () -> Unit, displayReset: Boolean, onResetClick: () -> Uni
             if (displayReset) {
                 ElevatedButton(
                     onClick = onResetClick,
-                    //colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
-                    colors = ButtonDefaults.buttonColors(containerColor = if (isSystemInDarkTheme()) Blue60 else Blue80),
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
                     shape = RoundedCornerShape(15),
                     modifier = Modifier
                         .width(128.dp)
@@ -232,10 +224,8 @@ fun BottomBar(onExit: () -> Unit, displayReset: Boolean, onResetClick: () -> Uni
                 ) {
                     Text(
                         text = "Reset",
-                        //color = MaterialTheme.colorScheme.onPrimary,
-                        color = if (isSystemInDarkTheme()) Color.Black else Color.White,
-                        //style = MaterialTheme.typography.labelMedium,
-                        fontFamily = Lato,
+                        color = MaterialTheme.colorScheme.onPrimary,
+                        style = MaterialTheme.typography.labelMedium,
                         fontSize = 18.sp,
                     )
                 }
@@ -253,14 +243,12 @@ fun BottomBar(onExit: () -> Unit, displayReset: Boolean, onResetClick: () -> Uni
                     .width(128.dp)
                     .height(46.dp),
                 shape = RoundedCornerShape(15),
-                //colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
-                colors = ButtonDefaults.buttonColors(containerColor = if (isSystemInDarkTheme()) Blue60 else Blue80),
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
             ) {
                 Text(
                     text = "Exit",
                     style = MaterialTheme.typography.labelMedium,
-                    //color = MaterialTheme.colorScheme.onPrimary,
-                    color = if (isSystemInDarkTheme()) Color.Black else Color.White,
+                    color = MaterialTheme.colorScheme.onPrimary,
                     fontSize = 18.sp,
                     modifier = Modifier
                         .wrapContentHeight(),
@@ -306,12 +294,9 @@ fun MainLayout(onNumberClick: (Int) -> Unit, isPortrait: Boolean) {
             Spacer(modifier = Modifier.height(100.dp))
             Text(
                 text = "Tap the number of players.",
-                //color = MaterialTheme.colorScheme.secondary,
-                color = if (isSystemInDarkTheme()) Color.White else Color.Black,
+                color = MaterialTheme.colorScheme.secondary,
                 textAlign = TextAlign.Center,
-                //style = MaterialTheme.typography.bodyMedium,
-                fontFamily = Lato,
-                fontSize = 28.sp,
+                style = MaterialTheme.typography.bodyMedium,
                 lineHeight = 28.sp,
             )
             if (isPortrait) {
@@ -378,20 +363,17 @@ fun NumberButton(value: Int, onNumberClick: (Int) -> Unit) {
         onClick = { onNumberClick(value) },
         shape = RoundedCornerShape(15),
         colors = ButtonDefaults.buttonColors(
-            //containerColor = MaterialTheme.colorScheme.primary,
-            containerColor = if (isSystemInDarkTheme()) Blue80 else Blue20,
+            containerColor = MaterialTheme.colorScheme.primary,
         ),
     ) {
         Text(
             text = value.toString(),
-            //color = MaterialTheme.colorScheme.secondary,
-            color = if (isSystemInDarkTheme()) Color.White else Color.Black,
+            color = MaterialTheme.colorScheme.secondary,
             modifier = Modifier
                 .height(96.dp)
                 .width(72.dp)
                 .wrapContentHeight(),
-            //style = MaterialTheme.typography.displayLarge,
-            fontFamily = Lato,
+            style = MaterialTheme.typography.displayLarge,
             fontSize = 62.sp,
             lineHeight = 66.sp,
             textAlign = TextAlign.Center,
@@ -412,10 +394,8 @@ fun ChosenValue(maxValue: Int) {
     Surface {
         Text(
             text = "Number of players: $maxValue",
-            //color = MaterialTheme.colorScheme.secondary,
-            color = if (isSystemInDarkTheme()) Color.White else Color.Black,
+            color = MaterialTheme.colorScheme.secondary,
             style = MaterialTheme.typography.bodyMedium,
-            //modifier = Modifier.padding(horizontal = 48.dp),
         )
     }
 }
@@ -453,8 +433,7 @@ fun PlayerDirection(direction: String, places: Int, refreshSelection: () -> Unit
             .clickable { refreshSelection() },
         shape = RoundedCornerShape(15),
         colors = ButtonDefaults.buttonColors(
-            //containerColor = MaterialTheme.colorScheme.primary,
-            containerColor = if (isSystemInDarkTheme()) Blue80 else Blue20,
+            containerColor = MaterialTheme.colorScheme.primary,
         ),
         onClick = refreshSelection,
     ) {
@@ -471,8 +450,7 @@ fun PlayerDirection(direction: String, places: Int, refreshSelection: () -> Unit
             )
             Text(
                 text = "$places",
-                //color = MaterialTheme.colorScheme.secondary,
-                color = if (isSystemInDarkTheme()) Color.White else Color.Black,
+                color = MaterialTheme.colorScheme.secondary,
                 style = MaterialTheme.typography.displayLarge,
             )
         }
@@ -482,12 +460,9 @@ fun PlayerDirection(direction: String, places: Int, refreshSelection: () -> Unit
         modifier = Modifier
             .padding(horizontal = 64.dp)
             .height(72.dp),
-        //style = MaterialTheme.typography.bodyMedium,
-        fontFamily = Lato,
-        fontSize = 28.sp,
+        style = MaterialTheme.typography.bodyMedium,
         lineHeight = 36.sp,
-        //color = MaterialTheme.colorScheme.secondary,
-        color = if (isSystemInDarkTheme()) Color.White else Color.Black,
+        color = MaterialTheme.colorScheme.secondary,
         textAlign = TextAlign.Center,
     )
 }

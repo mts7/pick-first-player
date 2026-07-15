@@ -37,4 +37,13 @@ class MainActivityBackHandlingTest {
             mainActivitySource.contains("enabled = numberOfPlayers")
         )
     }
+
+    @Test
+    fun exitApplication_doesNotForceKillTheProcess() {
+        assertFalse(
+            "exitApplication should not call exitProcess/System.exit -- that's a JVM/console " +
+                "idiom that skips Android's normal teardown. finish() alone is sufficient.",
+            mainActivitySource.contains("exitProcess")
+        )
+    }
 }
