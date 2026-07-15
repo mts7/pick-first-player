@@ -25,7 +25,7 @@ jobs:
       - name: Cache Android SDK platform
         uses: actions/cache@v4
         with:
-          path: /usr/local/lib/android/sdk/platforms
+          path: /usr/local/lib/android/sdk/platforms/android-37.0
           key: android-sdk-verify-v1-${{ hashFiles('app/build.gradle') }}
 
       - name: Run Lint
@@ -55,12 +55,12 @@ jobs:
           sudo udevadm control --reload-rules
           sudo udevadm trigger --name-match=kvm
 
-      - name: Cache Android SDK (platforms, system images, emulator)
+      - name: Cache Android SDK (platform, ATD system image, emulator)
         uses: actions/cache@v4
         with:
           path: |
-            /usr/local/lib/android/sdk/platforms
-            /usr/local/lib/android/sdk/system-images
+            /usr/local/lib/android/sdk/platforms/android-37.0
+            /usr/local/lib/android/sdk/system-images/android-34/google_atd
             /usr/local/lib/android/sdk/emulator
           key: android-sdk-ui-tests-v1-${{ hashFiles('app/build.gradle') }}
 
@@ -86,7 +86,7 @@ jobs:
       - name: Cache Android SDK platform
         uses: actions/cache@v4
         with:
-          path: /usr/local/lib/android/sdk/platforms
+          path: /usr/local/lib/android/sdk/platforms/android-37.0
           key: android-sdk-build-v1-${{ hashFiles('app/build.gradle') }}
 
       - name: Build Debug APK

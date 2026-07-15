@@ -25,7 +25,7 @@ jobs:
       - save_cache:
           key: android-sdk-docker-v1-{{ checksum "app/build.gradle" }}
           paths:
-            - /home/circleci/android-sdk/platforms
+            - /home/circleci/android-sdk/platforms/android-37.0
 
   ui-tests:
     executor:
@@ -44,8 +44,8 @@ jobs:
       - save_cache:
           key: android-sdk-machine-v1-{{ checksum "app/build.gradle" }}
           paths:
-            - /opt/android/sdk/platforms
-            - /opt/android/sdk/system-images
+            - /opt/android/sdk/platforms/android-37.0
+            - /opt/android/sdk/system-images/android-34/google_atd
 
   build:
     executor: android
