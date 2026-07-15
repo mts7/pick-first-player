@@ -140,7 +140,7 @@ class MainActivityComposablesTest {
         rule.onNode(hasContentDescription("Back arrow", true))
             .assertExists()
 
-        // TODO: test the rotation float value for all three directions
+        // Rotation values for all four directions are covered directly in DirectionRotationTest.
     }
 
     @Test
