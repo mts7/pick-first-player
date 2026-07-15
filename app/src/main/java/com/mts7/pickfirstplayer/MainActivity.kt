@@ -3,7 +3,7 @@ package com.mts7.pickfirstplayer
 import android.content.res.Configuration
 import android.os.Bundle
 import androidx.activity.ComponentActivity
-import androidx.activity.OnBackPressedCallback
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -75,15 +75,13 @@ class MainActivity : ComponentActivity() {
                 )
             }
 
-            this.onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
-                override fun handleOnBackPressed() {
-                    if (numberOfPlayers.intValue > 0) {
-                        numberOfPlayers.intValue = 0
-                    } else {
-                        exitApplication()
-                    }
+            BackHandler {
+                if (numberOfPlayers.intValue > 0) {
+                    numberOfPlayers.intValue = 0
+                } else {
+                    exitApplication()
                 }
-            })
+            }
         }
     }
 
