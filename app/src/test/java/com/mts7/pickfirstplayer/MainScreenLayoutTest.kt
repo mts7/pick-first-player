@@ -7,8 +7,13 @@ import com.mts7.pickfirstplayer.ui.theme.PickFirstPlayerTheme
 import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.annotation.Config
 
-class MainScreenLayoutInstrumentedTest {
+@RunWith(RobolectricTestRunner::class)
+@Config(sdk = [36])
+class MainScreenLayoutTest {
     @get:Rule
     val rule = createComposeRule()
 
