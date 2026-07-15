@@ -1,9 +1,0 @@
-- [x] Modernize build configuration
-    - [x] Update `app/build.gradle` (`packagingOptions` -> `packaging`)
-    - [x] Clean up root `build.gradle` (Checked: keeping version pinning as per user comments)
-- [x] Fix GitHub Actions `ui-tests`
-    - [x] Add KVM permission step
-    - [x] Add GPU rendering property to Gradle task
-- [x] Verify fixes
-    - [x] Run `./gradlew lintDebug`
-- [ ] Create walkthrough documentation
