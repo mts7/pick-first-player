@@ -3,20 +3,24 @@ package com.mts7.pickfirstplayer
 import android.content.res.Configuration
 import android.os.Bundle
 import androidx.activity.ComponentActivity
-import androidx.activity.OnBackPressedCallback
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -37,23 +41,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.mts7.pickfirstplayer.ui.theme.Blue20
-import com.mts7.pickfirstplayer.ui.theme.Blue60
-import com.mts7.pickfirstplayer.ui.theme.Blue80
-import com.mts7.pickfirstplayer.ui.theme.Lato
 import com.mts7.pickfirstplayer.ui.theme.PickFirstPlayerTheme
-import kotlin.system.exitProcess
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         setContent {
             val numberOfPlayers = rememberSaveable { mutableIntStateOf(0) }
             val player = rememberSaveable { mutableIntStateOf(0) }
@@ -69,27 +68,19 @@ class MainActivity : ComponentActivity() {
                         }
                     },
                     onExit = { exitApplication() },
-                    onRefresh = {
-                        setRandomPlayer(player, numberOfPlayers.intValue)
-                    },
-                )
+                ) {
+                    setRandomPlayer(player, numberOfPlayers.intValue)
+                }
             }
 
-            this.onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
-                override fun handleOnBackPressed() {
-                    if (numberOfPlayers.intValue > 0) {
-                        numberOfPlayers.intValue = 0
-                    } else {
-                        exitApplication()
-                    }
-                }
-            })
+            BackHandler(enabled = numberOfPlayers.intValue > 0) {
+                numberOfPlayers.intValue = 0
+            }
         }
     }
 
     private fun exitApplication() {
-        this@MainActivity.finishAndRemoveTask()
-        exitProcess(0)
+        this@MainActivity.finish()
     }
 
     private fun setRandomPlayer(player: MutableState<Int>, maxPlayers: Int) {
@@ -97,37 +88,44 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-fun getRelationalValues(maxCount: Int, player: Int): Pair<String, Int> {
+enum class Direction(val label: String) {
+    SELF("self"),
+    OTHER("other"),
+    LEFT("left"),
+    RIGHT("right"),
+}
+
+fun getRelationalValues(maxCount: Int, player: Int): Pair<Direction, Int> {
     if (player == 1) {
-        return Pair("self", 0)
+        return Pair(Direction.SELF, 0)
     }
 
-    if (maxCount == 2 && player == 2) {
-        return Pair("other", 1)
+    if ((maxCount == 2) && (player == 2)) {
+        return Pair(Direction.OTHER, 1)
     }
 
     val half = kotlin.math.ceil(maxCount.toDouble() / 2)
 
     if (player > half) {
-        return Pair("right", maxCount + 1 - player)
+        return Pair(Direction.RIGHT, ((maxCount + 1) - player))
     }
-    return Pair("left", player - 1)
+    return Pair(Direction.LEFT, player - 1)
 }
 
-fun getRelationalWording(direction: String, places: Int): String {
+fun getRelationalWording(direction: Direction, places: Int): String {
     if (places == 0) {
         return "You go first."
     }
 
     if (places == 1) {
-        if (direction == "other") {
+        if (direction == Direction.OTHER) {
             return "The other player goes first."
         }
 
-        return "The player on your $direction goes first."
+        return "The player on your ${direction.label} goes first."
     }
 
-    return "The player $places to your $direction goes first."
+    return "The player $places to your ${direction.label} goes first."
 }
 
 @Composable
@@ -144,28 +142,28 @@ fun MainScreen(
             BottomBar(
                 onExit = onExit,
                 displayReset = numberOfPlayers > 0,
-                onResetClick = { updateNumber(0) })
+            ) { updateNumber(0) }
         },
     ) { contentPadding ->
-        // unsure of what to do with the unused variable
-        contentPadding
         val configuration = LocalConfiguration.current
         val isPortrait = configuration.orientation == Configuration.ORIENTATION_PORTRAIT
 
-        if (numberOfPlayers > 0) {
-            val (direction, places) = getRelationalValues(
-                numberOfPlayers,
-                player
-            )
-            ResultScreen(
-                maxValue = numberOfPlayers,
-                direction = direction,
-                places = places,
-                refreshSelection = onRefresh,
-                isPortrait = isPortrait,
-            )
-        } else {
-            MainLayout(onNumberClick = { updateNumber(it) }, isPortrait = isPortrait)
+        Box(modifier = Modifier.padding(contentPadding)) {
+            if (numberOfPlayers > 0) {
+                val (direction, places) = getRelationalValues(
+                    numberOfPlayers,
+                    player,
+                )
+                ResultScreen(
+                    maxValue = numberOfPlayers,
+                    direction = direction,
+                    places = places,
+                    refreshSelection = onRefresh,
+                    isPortrait = isPortrait,
+                )
+            } else {
+                MainLayout(onNumberClick = { updateNumber(it) }, isPortrait = isPortrait)
+            }
         }
     }
 }
@@ -174,20 +172,20 @@ fun MainScreen(
 @Composable
 fun PreviewMainScreen() {
     PickFirstPlayerTheme {
-        MainScreen(0, player = 2, updateNumber = {}, onExit = {}, onRefresh = {})
+        MainScreen(0, player = 2, updateNumber = {}, onExit = {}) {}
     }
 }
 
 @Composable
 fun TopBar() {
     Surface(
-        //color = MaterialTheme.colorScheme.tertiary,
-        color = if (isSystemInDarkTheme()) Blue80 else Blue60,
+        color = MaterialTheme.colorScheme.tertiary,
         modifier = Modifier
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .statusBarsPadding(),
     ) {
         Column(
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Image(
                 painter = painterResource(id = R.drawable.logo_light),
@@ -211,9 +209,10 @@ fun PreviewTopBar() {
 @Composable
 fun BottomBar(onExit: () -> Unit, displayReset: Boolean, onResetClick: () -> Unit) {
     Surface(
-        //color = MaterialTheme.colorScheme.tertiary,
-        color = if (isSystemInDarkTheme()) Blue80 else Blue60,
-        modifier = Modifier.fillMaxWidth()
+        color = MaterialTheme.colorScheme.tertiary,
+        modifier = Modifier
+            .fillMaxWidth()
+            .navigationBarsPadding(),
     ) {
         Row(
             modifier = Modifier
@@ -223,8 +222,7 @@ fun BottomBar(onExit: () -> Unit, displayReset: Boolean, onResetClick: () -> Uni
             if (displayReset) {
                 ElevatedButton(
                     onClick = onResetClick,
-                    //colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
-                    colors = ButtonDefaults.buttonColors(containerColor = if (isSystemInDarkTheme()) Blue60 else Blue80),
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
                     shape = RoundedCornerShape(15),
                     modifier = Modifier
                         .width(128.dp)
@@ -232,19 +230,17 @@ fun BottomBar(onExit: () -> Unit, displayReset: Boolean, onResetClick: () -> Uni
                 ) {
                     Text(
                         text = "Reset",
-                        //color = MaterialTheme.colorScheme.onPrimary,
-                        color = if (isSystemInDarkTheme()) Color.Black else Color.White,
-                        //style = MaterialTheme.typography.labelMedium,
-                        fontFamily = Lato,
+                        color = MaterialTheme.colorScheme.onPrimary,
+                        style = MaterialTheme.typography.labelMedium,
                         fontSize = 18.sp,
                     )
                 }
                 Spacer(
-                    modifier = Modifier.width(16.dp)
+                    modifier = Modifier.width(16.dp),
                 )
             } else {
                 Spacer(
-                    modifier = Modifier.width(146.dp)
+                    modifier = Modifier.width(146.dp),
                 )
             }
             ElevatedButton(
@@ -253,26 +249,24 @@ fun BottomBar(onExit: () -> Unit, displayReset: Boolean, onResetClick: () -> Uni
                     .width(128.dp)
                     .height(46.dp),
                 shape = RoundedCornerShape(15),
-                //colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
-                colors = ButtonDefaults.buttonColors(containerColor = if (isSystemInDarkTheme()) Blue60 else Blue80),
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
             ) {
                 Text(
                     text = "Exit",
                     style = MaterialTheme.typography.labelMedium,
-                    //color = MaterialTheme.colorScheme.onPrimary,
-                    color = if (isSystemInDarkTheme()) Color.Black else Color.White,
+                    color = MaterialTheme.colorScheme.onPrimary,
                     fontSize = 18.sp,
                     modifier = Modifier
                         .wrapContentHeight(),
                 )
             }
             Spacer(
-                modifier = Modifier.width(16.dp)
+                modifier = Modifier.width(16.dp),
             )
             Image(
                 painter = painterResource(id = R.drawable.mts7_logo_black_192),
                 contentDescription = "mts7 logo",
-                modifier = Modifier.size(48.dp)
+                modifier = Modifier.size(48.dp),
             )
         }
     }
@@ -282,7 +276,7 @@ fun BottomBar(onExit: () -> Unit, displayReset: Boolean, onResetClick: () -> Uni
 @Composable
 fun PreviewBottomBarWithReset() {
     PickFirstPlayerTheme {
-        BottomBar(onExit = {}, true, onResetClick = {})
+        BottomBar(onExit = {}, displayReset = true) {}
     }
 }
 
@@ -290,14 +284,14 @@ fun PreviewBottomBarWithReset() {
 @Composable
 fun PreviewBottomBarWithoutReset() {
     PickFirstPlayerTheme {
-        BottomBar(onExit = {}, false, onResetClick = {})
+        BottomBar(onExit = {}, displayReset = false) {}
     }
 }
 
 @Composable
 fun MainLayout(onNumberClick: (Int) -> Unit, isPortrait: Boolean) {
     Surface(
-        modifier = Modifier.clip(RoundedCornerShape(15))
+        modifier = Modifier.clip(RoundedCornerShape(15)),
     ) {
         Column(
             modifier = Modifier.fillMaxWidth(),
@@ -306,12 +300,9 @@ fun MainLayout(onNumberClick: (Int) -> Unit, isPortrait: Boolean) {
             Spacer(modifier = Modifier.height(100.dp))
             Text(
                 text = "Tap the number of players.",
-                //color = MaterialTheme.colorScheme.secondary,
-                color = if (isSystemInDarkTheme()) Color.White else Color.Black,
+                color = MaterialTheme.colorScheme.secondary,
                 textAlign = TextAlign.Center,
-                //style = MaterialTheme.typography.bodyMedium,
-                fontFamily = Lato,
-                fontSize = 28.sp,
+                style = MaterialTheme.typography.bodyMedium,
                 lineHeight = 28.sp,
             )
             if (isPortrait) {
@@ -368,7 +359,7 @@ fun ButtonGrid(onNumberClick: (Int) -> Unit) {
 @Composable
 fun PreviewButtonGrid() {
     PickFirstPlayerTheme {
-        ButtonGrid(onNumberClick = {})
+        ButtonGrid {}
     }
 }
 
@@ -378,20 +369,17 @@ fun NumberButton(value: Int, onNumberClick: (Int) -> Unit) {
         onClick = { onNumberClick(value) },
         shape = RoundedCornerShape(15),
         colors = ButtonDefaults.buttonColors(
-            //containerColor = MaterialTheme.colorScheme.primary,
-            containerColor = if (isSystemInDarkTheme()) Blue80 else Blue20,
+            containerColor = MaterialTheme.colorScheme.primary,
         ),
     ) {
         Text(
             text = value.toString(),
-            //color = MaterialTheme.colorScheme.secondary,
-            color = if (isSystemInDarkTheme()) Color.White else Color.Black,
+            color = MaterialTheme.colorScheme.secondary,
             modifier = Modifier
                 .height(96.dp)
                 .width(72.dp)
                 .wrapContentHeight(),
-            //style = MaterialTheme.typography.displayLarge,
-            fontFamily = Lato,
+            style = MaterialTheme.typography.displayLarge,
             fontSize = 62.sp,
             lineHeight = 66.sp,
             textAlign = TextAlign.Center,
@@ -403,7 +391,7 @@ fun NumberButton(value: Int, onNumberClick: (Int) -> Unit) {
 @Composable
 fun PreviewNumberButton() {
     PickFirstPlayerTheme {
-        NumberButton(value = 7, onNumberClick = {})
+        NumberButton(value = 7) {}
     }
 }
 
@@ -412,10 +400,8 @@ fun ChosenValue(maxValue: Int) {
     Surface {
         Text(
             text = "Number of players: $maxValue",
-            //color = MaterialTheme.colorScheme.secondary,
-            color = if (isSystemInDarkTheme()) Color.White else Color.Black,
+            color = MaterialTheme.colorScheme.secondary,
             style = MaterialTheme.typography.bodyMedium,
-            //modifier = Modifier.padding(horizontal = 48.dp),
         )
     }
 }
@@ -434,27 +420,26 @@ fun PreviewChosenValue() {
 }
 
 @Composable
-fun PlayerDirection(direction: String, places: Int, refreshSelection: () -> Unit) {
+fun PlayerDirection(direction: Direction, places: Int, refreshSelection: () -> Unit) {
     val rotation = when (direction) {
-        "left" -> 0.0F
-        "self" -> 270.0F
-        "other" -> 90.0F
-        else -> 180.0F
+        Direction.LEFT -> 0.0F
+        Direction.SELF -> 270.0F
+        Direction.OTHER -> 90.0F
+        Direction.RIGHT -> 180.0F
     }
 
-    val isVertical = places == 0 || direction == "other"
+    val isVertical = (places == 0) || (direction == Direction.OTHER)
 
     Button(
         modifier = Modifier
             .padding(
                 horizontal = 24.dp,
-                vertical = if (isVertical) 8.dp else 0.dp
+                vertical = if (isVertical) 8.dp else 0.dp,
             )
             .clickable { refreshSelection() },
         shape = RoundedCornerShape(15),
         colors = ButtonDefaults.buttonColors(
-            //containerColor = MaterialTheme.colorScheme.primary,
-            containerColor = if (isSystemInDarkTheme()) Blue80 else Blue20,
+            containerColor = MaterialTheme.colorScheme.primary,
         ),
         onClick = refreshSelection,
     ) {
@@ -470,9 +455,8 @@ fun PlayerDirection(direction: String, places: Int, refreshSelection: () -> Unit
                 modifier = Modifier.width(24.dp)
             )
             Text(
-                text = "$places",
-                //color = MaterialTheme.colorScheme.secondary,
-                color = if (isSystemInDarkTheme()) Color.White else Color.Black,
+                text = places.toString(),
+                color = MaterialTheme.colorScheme.secondary,
                 style = MaterialTheme.typography.displayLarge,
             )
         }
@@ -482,12 +466,9 @@ fun PlayerDirection(direction: String, places: Int, refreshSelection: () -> Unit
         modifier = Modifier
             .padding(horizontal = 64.dp)
             .height(72.dp),
-        //style = MaterialTheme.typography.bodyMedium,
-        fontFamily = Lato,
-        fontSize = 28.sp,
+        style = MaterialTheme.typography.bodyMedium,
         lineHeight = 36.sp,
-        //color = MaterialTheme.colorScheme.secondary,
-        color = if (isSystemInDarkTheme()) Color.White else Color.Black,
+        color = MaterialTheme.colorScheme.secondary,
         textAlign = TextAlign.Center,
     )
 }
@@ -500,7 +481,7 @@ fun PreviewPlayerDirectionLeft() {
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.fillMaxWidth(),
         ) {
-            PlayerDirection("left", 2, refreshSelection = {})
+            PlayerDirection(Direction.LEFT, 2) {}
         }
     }
 }
@@ -513,7 +494,7 @@ fun PreviewPlayerDirectionRight() {
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.fillMaxWidth(),
         ) {
-            PlayerDirection("right", 3, refreshSelection = {})
+            PlayerDirection(Direction.RIGHT, 3) {}
         }
     }
 }
@@ -526,7 +507,7 @@ fun PreviewPlayerDirectionOther() {
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.fillMaxWidth(),
         ) {
-            PlayerDirection("other", 1, refreshSelection = {})
+            PlayerDirection(Direction.OTHER, 1) {}
         }
     }
 }
@@ -539,7 +520,7 @@ fun PreviewPlayerDirectionSelf() {
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.fillMaxWidth(),
         ) {
-            PlayerDirection("self", 0, refreshSelection = {})
+            PlayerDirection(Direction.SELF, 0) {}
         }
     }
 }
@@ -547,10 +528,10 @@ fun PreviewPlayerDirectionSelf() {
 @Composable
 fun ResultScreen(
     maxValue: Int,
-    direction: String,
+    direction: Direction,
     places: Int,
     refreshSelection: () -> Unit,
-    isPortrait: Boolean
+    isPortrait: Boolean,
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -574,10 +555,10 @@ fun PreviewResultScreenPortrait() {
     PickFirstPlayerTheme {
         ResultScreen(
             maxValue = 6,
-            direction = "left",
+            direction = Direction.LEFT,
             places = 3,
             refreshSelection = {},
-            isPortrait = true
+            isPortrait = true,
         )
     }
 }
@@ -588,10 +569,10 @@ fun PreviewResultScreenLandscape() {
     PickFirstPlayerTheme {
         ResultScreen(
             maxValue = 6,
-            direction = "left",
+            direction = Direction.LEFT,
             places = 3,
             refreshSelection = {},
-            isPortrait = false
+            isPortrait = false,
         )
     }
 }

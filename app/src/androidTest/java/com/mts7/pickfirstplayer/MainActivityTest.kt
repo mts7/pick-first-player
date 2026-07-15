@@ -7,7 +7,7 @@ import androidx.compose.ui.test.hasClickAction
 import androidx.compose.ui.test.hasContentDescription
 import androidx.compose.ui.test.hasParent
 import androidx.compose.ui.test.hasText
-import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.performClick
 import com.mts7.pickfirstplayer.ui.theme.PickFirstPlayerTheme
 import org.junit.Rule
@@ -128,7 +128,7 @@ class MainActivityTest {
 
     @Test
     fun playerDirection_rotationLeft() {
-        val direction = "left"
+        val direction = Direction.LEFT
         val places = 2
         rule.setContent { PlayerDirection(direction, places, refreshSelection = {}) }
 
@@ -140,7 +140,7 @@ class MainActivityTest {
 
     @Test
     fun playerDirection_placesZero() {
-        val direction = "self"
+        val direction = Direction.SELF
         val places = 0
         rule.setContent { PlayerDirection(direction, places, refreshSelection = {}) }
 
@@ -150,7 +150,7 @@ class MainActivityTest {
 
     @Test
     fun playerDirection_placesOneOther() {
-        val direction = "other"
+        val direction = Direction.OTHER
         val places = 1
         rule.setContent { PlayerDirection(direction, places, refreshSelection = {}) }
 
@@ -160,7 +160,7 @@ class MainActivityTest {
 
     @Test
     fun playerDirection_placesTwo() {
-        val direction = "right"
+        val direction = Direction.RIGHT
         val places = 2
         rule.setContent { PlayerDirection(direction, places, refreshSelection = {}) }
 
@@ -180,11 +180,11 @@ class MainActivityTest {
 
     @Test
     fun playerDirection_hasWording() {
-        val direction = "left"
+        val direction = Direction.LEFT
         val places = 1
         rule.setContent { PlayerDirection(direction, places, refreshSelection = {}) }
 
-        rule.onNode(hasText("The player on your $direction goes first."))
+        rule.onNode(hasText("The player on your ${direction.label} goes first."))
             .assertExists()
     }
 }
