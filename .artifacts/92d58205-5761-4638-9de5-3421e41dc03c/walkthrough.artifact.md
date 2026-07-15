@@ -1,22 +1,22 @@
-# Walkthrough: Manifest and Test Fixes
+# Walkthrough: UI Test Optimizations
 
-I have addressed the specific API compatibility and deprecation warnings you identified.
+I have optimized the `ui-tests` job in your GitHub Actions workflow to run faster and on a more modern Android version.
 
 ## Changes Made
 
-### Android Manifest
-#### [MODIFY] [AndroidManifest.xml](file:///Users/mts7/Repositories/pick-first-player/app/src/main/AndroidManifest.xml)
-- Updated `tools:targetApi` to `33`. This correctly informs the lint tool that the `android:enableOnBackInvokedCallback` attribute is intended for API 33 and higher, resolving the "only used in API level 33 and higher" warning.
+### GitHub Actions Workflow
+#### [MODIFY] [android.yml](file:///Users/mts7/Repositories/pick-first-player/.github/workflows/android.yml)
+- **Updated API Level**: Switched from API 29 to **API 34** (Android 14) to better align with your app's target SDK.
+- **Enabled Google ATD**: Changed the emulator target to `google_atd` (Android Test Device).
+    > [!TIP]
+    > ATD images are headless and optimized for CI. They lack background services like Google Play, which significantly reduces boot time and resource usage.
+- **Disabled Animations**: Added `disable-animations: true` to the emulator runner. This prevents the emulator from waiting for UI transitions to finish, speeding up test execution.
+- **Architecture**: Explicitly set `arch: x86_64` for optimal performance on GitHub's Linux runners.
 
-### Instrumented Tests
-#### [MODIFY] [MainActivityBackPressInstrumentedTest.kt](file:///Users/mts7/Repositories/pick-first-player/app/src/androidTest/java/com/mts7/pickfirstplayer/MainActivityBackPressInstrumentedTest.kt)
-#### [MODIFY] [MainActivityLayoutInstrumentedTest.kt](file:///Users/mts7/Repositories/pick-first-player/app/src/androidTest/java/com/mts7/pickfirstplayer/MainActivityLayoutInstrumentedTest.kt)
-#### [MODIFY] [MainActivityTest.kt](file:///Users/mts7/Repositories/pick-first-player/app/src/androidTest/java/com/mts7/pickfirstplayer/MainActivityTest.kt)
-#### [MODIFY] [MainScreenLayoutInstrumentedTest.kt](file:///Users/mts7/Repositories/pick-first-player/app/src/androidTest/java/com/mts7/pickfirstplayer/MainScreenLayoutInstrumentedTest.kt)
-- Migrated all usages of `createAndroidComposeRule` and `createComposeRule` to the `androidx.compose.ui.test.junit4.v2` package.
-- This resolves the deprecation warnings and aligns your tests with the latest Jetpack Compose testing practices, which use `StandardTestDispatcher` for more predictable coroutine behavior.
+## Expected Results
+- **Faster Boot**: The `google_atd` image should boot much faster than the standard image.
+- **Reduced Test Time**: Disabling animations and using a more efficient image should noticeably reduce the "wall-clock" time of your UI tests.
 
-## Verification Results
-
-### Automated Tests
-- Ran `:app:lintDebug` successfully. This confirms that the Manifest warning is resolved and that the code changes are syntactically correct and compatible with the project's configuration.
+## How to Verify
+1. **Push Changes**: Push this update to your `master` branch.
+2. **Monitor Actions**: Observe the `ui-tests` job in the GitHub Actions tab. You should see a decrease in the total runtime compared to the previous 8-minute baseline.
