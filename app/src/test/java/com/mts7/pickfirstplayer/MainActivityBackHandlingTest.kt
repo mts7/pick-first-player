@@ -27,4 +27,14 @@ class MainActivityBackHandlingTest {
             mainActivitySource.contains("BackHandler")
         )
     }
+
+    @Test
+    fun backPressHandling_isDisabledOnTheHomeScreen() {
+        assertTrue(
+            "Expected BackHandler's enabled param to be conditioned on numberOfPlayers so that " +
+                "on the home screen (numberOfPlayers == 0) the callback is disabled and back is " +
+                "handled by Android, not the app.",
+            mainActivitySource.contains("enabled = numberOfPlayers")
+        )
+    }
 }

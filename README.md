@@ -17,7 +17,8 @@ The logs show `AconfigStorageReadException: ERROR_PACKAGE_NOT_FOUND: package and
 - **Splash Screen**: Integrate `androidx.core:core-splashscreen` to handle the startup transition correctly on Android 12+.
 
 #### 2. MainActivity Optimizations
-- **Fix Back-Press Bug**: The `onBackPressedDispatcher` callback is currently registered inside the `setContent` Composable. This must be moved to `onCreate` to prevent hundreds of duplicate registrations during recomposition.
+- **Fix BackHandler Logic**: The current `BackHandler` is always enabled, which intercepts the back gesture even at the root state. This should be changed to `enabled = numberOfPlayers.intValue > 0` so that the system handles the exit gesture naturally.
+- **Cleanup Exit Logic**: Remove `exitProcess(0)` and rely on `finish()` or system defaults.
 - **Scaffold Padding**: Ensure `contentPadding` is properly applied to child views.
 - **Startup Logging**: Add `STARTUP_TIMING` logs to track exactly where the delay occurs.
 

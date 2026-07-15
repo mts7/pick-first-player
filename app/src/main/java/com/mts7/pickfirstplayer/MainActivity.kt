@@ -53,7 +53,6 @@ import com.mts7.pickfirstplayer.ui.theme.Blue60
 import com.mts7.pickfirstplayer.ui.theme.Blue80
 import com.mts7.pickfirstplayer.ui.theme.Lato
 import com.mts7.pickfirstplayer.ui.theme.PickFirstPlayerTheme
-import kotlin.system.exitProcess
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -80,19 +79,14 @@ class MainActivity : ComponentActivity() {
                 )
             }
 
-            BackHandler {
-                if (numberOfPlayers.intValue > 0) {
-                    numberOfPlayers.intValue = 0
-                } else {
-                    exitApplication()
-                }
+            BackHandler(enabled = numberOfPlayers.intValue > 0) {
+                numberOfPlayers.intValue = 0
             }
         }
     }
 
     private fun exitApplication() {
-        this@MainActivity.finishAndRemoveTask()
-        exitProcess(0)
+        this@MainActivity.finish()
     }
 
     private fun setRandomPlayer(player: MutableState<Int>, maxPlayers: Int) {
