@@ -89,37 +89,44 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-fun getRelationalValues(maxCount: Int, player: Int): Pair<String, Int> {
+enum class Direction(val label: String) {
+    SELF("self"),
+    OTHER("other"),
+    LEFT("left"),
+    RIGHT("right"),
+}
+
+fun getRelationalValues(maxCount: Int, player: Int): Pair<Direction, Int> {
     if (player == 1) {
-        return Pair("self", 0)
+        return Pair(Direction.SELF, 0)
     }
 
     if (maxCount == 2 && player == 2) {
-        return Pair("other", 1)
+        return Pair(Direction.OTHER, 1)
     }
 
     val half = kotlin.math.ceil(maxCount.toDouble() / 2)
 
     if (player > half) {
-        return Pair("right", maxCount + 1 - player)
+        return Pair(Direction.RIGHT, maxCount + 1 - player)
     }
-    return Pair("left", player - 1)
+    return Pair(Direction.LEFT, player - 1)
 }
 
-fun getRelationalWording(direction: String, places: Int): String {
+fun getRelationalWording(direction: Direction, places: Int): String {
     if (places == 0) {
         return "You go first."
     }
 
     if (places == 1) {
-        if (direction == "other") {
+        if (direction == Direction.OTHER) {
             return "The other player goes first."
         }
 
-        return "The player on your $direction goes first."
+        return "The player on your ${direction.label} goes first."
     }
 
-    return "The player $places to your $direction goes first."
+    return "The player $places to your ${direction.label} goes first."
 }
 
 @Composable
@@ -414,15 +421,15 @@ fun PreviewChosenValue() {
 }
 
 @Composable
-fun PlayerDirection(direction: String, places: Int, refreshSelection: () -> Unit) {
+fun PlayerDirection(direction: Direction, places: Int, refreshSelection: () -> Unit) {
     val rotation = when (direction) {
-        "left" -> 0.0F
-        "self" -> 270.0F
-        "other" -> 90.0F
-        else -> 180.0F
+        Direction.LEFT -> 0.0F
+        Direction.SELF -> 270.0F
+        Direction.OTHER -> 90.0F
+        Direction.RIGHT -> 180.0F
     }
 
-    val isVertical = places == 0 || direction == "other"
+    val isVertical = places == 0 || direction == Direction.OTHER
 
     Button(
         modifier = Modifier
@@ -475,7 +482,7 @@ fun PreviewPlayerDirectionLeft() {
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.fillMaxWidth(),
         ) {
-            PlayerDirection("left", 2, refreshSelection = {})
+            PlayerDirection(Direction.LEFT, 2, refreshSelection = {})
         }
     }
 }
@@ -488,7 +495,7 @@ fun PreviewPlayerDirectionRight() {
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.fillMaxWidth(),
         ) {
-            PlayerDirection("right", 3, refreshSelection = {})
+            PlayerDirection(Direction.RIGHT, 3, refreshSelection = {})
         }
     }
 }
@@ -501,7 +508,7 @@ fun PreviewPlayerDirectionOther() {
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.fillMaxWidth(),
         ) {
-            PlayerDirection("other", 1, refreshSelection = {})
+            PlayerDirection(Direction.OTHER, 1, refreshSelection = {})
         }
     }
 }
@@ -514,7 +521,7 @@ fun PreviewPlayerDirectionSelf() {
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.fillMaxWidth(),
         ) {
-            PlayerDirection("self", 0, refreshSelection = {})
+            PlayerDirection(Direction.SELF, 0, refreshSelection = {})
         }
     }
 }
@@ -522,7 +529,7 @@ fun PreviewPlayerDirectionSelf() {
 @Composable
 fun ResultScreen(
     maxValue: Int,
-    direction: String,
+    direction: Direction,
     places: Int,
     refreshSelection: () -> Unit,
     isPortrait: Boolean
@@ -549,7 +556,7 @@ fun PreviewResultScreenPortrait() {
     PickFirstPlayerTheme {
         ResultScreen(
             maxValue = 6,
-            direction = "left",
+            direction = Direction.LEFT,
             places = 3,
             refreshSelection = {},
             isPortrait = true
@@ -563,7 +570,7 @@ fun PreviewResultScreenLandscape() {
     PickFirstPlayerTheme {
         ResultScreen(
             maxValue = 6,
-            direction = "left",
+            direction = Direction.LEFT,
             places = 3,
             refreshSelection = {},
             isPortrait = false

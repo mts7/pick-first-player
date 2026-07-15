@@ -8,7 +8,7 @@ internal class MainActivityTest {
     fun getRelationalValuesWithSixPlayersSelectOne() {
         val maxCount = 6
         val player = 1
-        val expected = Pair("self", 0)
+        val expected = Pair(Direction.SELF, 0)
 
         val actual = getRelationalValues(maxCount, player)
 
@@ -19,7 +19,7 @@ internal class MainActivityTest {
     fun getRelationalValuesWithFivePlayersSelectThree() {
         val maxCount = 5
         val player = 3
-        val expected = Pair("left", 2)
+        val expected = Pair(Direction.LEFT, 2)
 
         val actual = getRelationalValues(maxCount, player)
 
@@ -30,7 +30,7 @@ internal class MainActivityTest {
     fun getRelationalValuesWithFivePlayersSelectFour() {
         val maxCount = 5
         val player = 4
-        val expected = Pair("right", 2)
+        val expected = Pair(Direction.RIGHT, 2)
 
         val actual = getRelationalValues(maxCount, player)
 
@@ -41,7 +41,7 @@ internal class MainActivityTest {
     fun getRelationalValuesWithTwoPlayersSelectTwo() {
         val maxCount = 2
         val player = 2
-        val expected = Pair("other", 1)
+        val expected = Pair(Direction.OTHER, 1)
 
         val actual = getRelationalValues(maxCount, player)
 
@@ -50,7 +50,7 @@ internal class MainActivityTest {
 
     @Test
     fun getRelationalWordingWithSelf() {
-        val direction = "self"
+        val direction = Direction.SELF
         val places = 0
 
         val actual = getRelationalWording(direction, places)
@@ -60,7 +60,7 @@ internal class MainActivityTest {
 
     @Test
     fun getRelationalWordingWithOther() {
-        val direction = "other"
+        val direction = Direction.OTHER
         val places = 1
 
         val actual = getRelationalWording(direction, places)
@@ -70,7 +70,7 @@ internal class MainActivityTest {
 
     @Test
     fun getRelationalWordingWithOneToLeft() {
-        val direction = "left"
+        val direction = Direction.LEFT
         val places = 1
 
         val actual = getRelationalWording(direction, places)
@@ -80,7 +80,7 @@ internal class MainActivityTest {
 
     @Test
     fun getRelationalWordingWithTwoToLeft() {
-        val direction = "left"
+        val direction = Direction.LEFT
         val places = 2
 
         val actual = getRelationalWording(direction, places)
@@ -90,7 +90,7 @@ internal class MainActivityTest {
 
     @Test
     fun getRelationalWordingWithThreeToRight() {
-        val direction = "right"
+        val direction = Direction.RIGHT
         val places = 3
 
         val actual = getRelationalWording(direction, places)
@@ -100,7 +100,7 @@ internal class MainActivityTest {
 
     @Test
     fun getRelationalWordingWithTwoToRight() {
-        val direction = "right"
+        val direction = Direction.RIGHT
         val places = 2
 
         val actual = getRelationalWording(direction, places)
@@ -110,56 +110,11 @@ internal class MainActivityTest {
 
     @Test
     fun getRelationalWordingWithOneToRight() {
-        val direction = "right"
+        val direction = Direction.RIGHT
         val places = 1
 
         val actual = getRelationalWording(direction, places)
 
         assertEquals("The player on your right goes first.", actual)
     }
-
-//    @ParameterizedTest(name = "getRelationalWording")
-//    @MethodSource("getRelationalWordingData")
-//    fun `relational wording should match as indicated`(data: RelationalWordingData) {
-//        val actual = getRelationalWording(data.direction, data.places)
-//
-//        assertEquals(data.expected, actual)
-//    }
-//
-//    private companion object {
-//        @JvmStatic
-//        fun getRelationalWordingData(): Stream<RelationalWordingData> = Stream.of(
-//            RelationalWordingData(
-//                direction = "self",
-//                places = 0,
-//                expected = "You go first."
-//            ),
-//            RelationalWordingData(
-//                direction = "left",
-//                places = 1,
-//                expected = "The player on your left goes first."
-//            ),
-//            RelationalWordingData(
-//                direction = "right",
-//                places = 1,
-//                expected = "The player on your right goes first."
-//            ),
-//            RelationalWordingData(
-//                direction = "left",
-//                places = 2,
-//                expected = "The player 2 to your left goes first."
-//            ),
-//            RelationalWordingData(
-//                direction = "right",
-//                places = 2,
-//                expected = "The player 2 to your right goes first."
-//            ),
-//        )
-//    }
-//
-//    data class RelationalWordingData(
-//        val direction: String,
-//        val places: Int,
-//        val expected: String,
-//    )
 }
