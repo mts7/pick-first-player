@@ -14,11 +14,18 @@ jobs:
     executor: android
     steps:
       - checkout
+      - restore_cache:
+          keys:
+            - android-sdk-docker-v1-{{ checksum "app/build.gradle" }}
       - gradle/with_cache:
           steps:
             - run:
                 name: Lint and unit tests
                 command: ./gradlew lint test --stacktrace
+      - save_cache:
+          key: android-sdk-docker-v1-{{ checksum "app/build.gradle" }}
+          paths:
+            - /home/circleci/android-sdk/platforms
 
   ui-tests:
     executor:
@@ -26,16 +33,27 @@ jobs:
       tag: 2026.05.1
     steps:
       - checkout
+      - restore_cache:
+          keys:
+            - android-sdk-machine-v1-{{ checksum "app/build.gradle" }}
       - gradle/with_cache:
           steps:
             - run:
                 name: Instrumented tests (Gradle Managed Device, ATD image)
                 command: ./gradlew pixel6Api34DebugAndroidTest --stacktrace
+      - save_cache:
+          key: android-sdk-machine-v1-{{ checksum "app/build.gradle" }}
+          paths:
+            - /opt/android/sdk/platforms
+            - /opt/android/sdk/system-images
 
   build:
     executor: android
     steps:
       - checkout
+      - restore_cache:
+          keys:
+            - android-sdk-docker-v1-{{ checksum "app/build.gradle" }}
       - gradle/with_cache:
           steps:
             - run:

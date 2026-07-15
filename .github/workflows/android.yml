@@ -22,6 +22,12 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
 
+      - name: Cache Android SDK platform
+        uses: actions/cache@v4
+        with:
+          path: /usr/local/lib/android/sdk/platforms
+          key: android-sdk-verify-v1-${{ hashFiles('app/build.gradle') }}
+
       - name: Run Lint
         run: ./gradlew lint
 
@@ -49,6 +55,15 @@ jobs:
           sudo udevadm control --reload-rules
           sudo udevadm trigger --name-match=kvm
 
+      - name: Cache Android SDK (platforms, system images, emulator)
+        uses: actions/cache@v4
+        with:
+          path: |
+            /usr/local/lib/android/sdk/platforms
+            /usr/local/lib/android/sdk/system-images
+            /usr/local/lib/android/sdk/emulator
+          key: android-sdk-ui-tests-v1-${{ hashFiles('app/build.gradle') }}
+
       - name: Run Instrumented Tests (GMD)
         run: ./gradlew pixel6Api34DebugAndroidTest -Pandroid.testoptions.manageddevices.emulator.gpu=swiftshader_indirect
 
@@ -67,6 +82,12 @@ jobs:
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
+
+      - name: Cache Android SDK platform
+        uses: actions/cache@v4
+        with:
+          path: /usr/local/lib/android/sdk/platforms
+          key: android-sdk-build-v1-${{ hashFiles('app/build.gradle') }}
 
       - name: Build Debug APK
         run: ./gradlew assembleDebug
