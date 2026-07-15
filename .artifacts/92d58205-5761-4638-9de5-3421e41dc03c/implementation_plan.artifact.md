@@ -1,42 +1,31 @@
-# Modernize GitHub Actions with Gradle Managed Devices
+# Fix Hardware Acceleration and Modernize Build Configuration
 
-This plan replaces the 3rd-party emulator runner with the official **Gradle Managed Devices (GMD)** feature. GMD provides a more stable, built-in way to manage emulators directly from the Android Gradle Plugin (AGP), optimizing for headless CI environments.
-
-## User Review Required
-
-> [!IMPORTANT]
-> This change moves the emulator configuration into your `build.gradle` file. This is the recommended practice for modern Android development as it ensures the same environment is used locally and on CI.
->
-> We will use **API 34** with the **Google ATD (Android Test Device)** image. ATD images are optimized for headless testing, which will help keep execution time as low as possible on Linux runners.
+This plan addresses the critical `x86_64 emulation currently requires hardware acceleration!` error by enabling KVM on the GitHub Actions runner. It also modernizes the build configuration to resolve deprecation warnings and align with Android Gradle Plugin (AGP) 9 standards.
 
 ## Proposed Changes
-
-### Build Configuration
-
-#### [MODIFY] [app/build.gradle](file:///Users/mts7/Repositories/pick-first-player/app/build.gradle)
-- Add `testOptions.managedDevices` block to define a `pixel6Api34` device.
-- Configure it to use `apiLevel = 34` and `systemImageSource = "google-atd"`.
 
 ### GitHub Actions Workflow
 
 #### [MODIFY] [android.yml](file:///Users/mts7/Repositories/pick-first-player/.github/workflows/android.yml)
-- Simplify the `ui-tests` job:
-    - Remove the `reactivecircus/android-emulator-runner` action.
-    - Run the tests using the GMD command: `./gradlew pixel6Api34DebugAndroidTest`.
-    - (Optional) Add a step to clean up GMD artifacts if needed, though GHA runners are ephemeral.
+- **Enable KVM**: Add a step to grant permissions to `/dev/kvm`.
+- **Force Software Rendering**: Pass `-Pandroid.testoptions.manageddevices.emulator.gpu=swiftshader_indirect` to the GMD task.
+- **Gradle Caching**: Ensure the GMD setup and system images are cached to avoid re-downloading them every time (though GMD images are quite large, this helps with the setup task).
 
-### Instrumented Tests
+### Build Configuration
 
-#### [MODIFY] [MainActivityBackPressInstrumentedTest.kt](file:///Users/mts7/Repositories/pick-first-player/app/src/androidTest/java/com/mts7/pickfirstplayer/MainActivityBackPressInstrumentedTest.kt)
-- Replace the legacy Espresso `pressBack()` with the modern Compose-native `performKeyInput { pressKey(Key.Back) }`.
-- This avoids the common `RootViewWithoutFocusException` that occurs on headless runners when using system-level back press events.
+#### [MODIFY] [app/build.gradle](file:///Users/mts7/Repositories/pick-first-player/app/build.gradle)
+- **Migrate `packagingOptions`**: Rename to `packaging` to resolve the deprecation warning.
+- **Refine `testOptions`**: Ensure the DSL is as clean as possible for AGP 9.
+
+#### [MODIFY] [build.gradle](file:///Users/mts7/Repositories/pick-first-player/build.gradle)
+- **Cleanup `buildscript`**: Remove the redundant Kotlin plugin dependency in the top-level `buildscript` block, as it is now managed via the `plugins` block and AGP's built-in support.
 
 ## Verification Plan
 
 ### Automated Tests
-- Verify that `app/build.gradle` compiles after adding the GMD block.
-- Verify that the GitHub Actions workflow syntax is valid.
+- Run `:app:lintDebug` to ensure no new deprecation warnings are introduced.
+- The `ui-tests` job in GitHub Actions must pass on the `pixel6Api34` device.
 
 ### Manual Verification
-- After pushing, monitor the GitHub Actions "Summary" tab.
-- The `ui-tests` job should now use the native Gradle task and report results directly to the workflow summary.
+- Check the GitHub Actions logs for the "Enable KVM" step output.
+- Verify that the total runtime for `ui-tests` is reasonable (aiming for < 10 minutes with ATD and KVM).
