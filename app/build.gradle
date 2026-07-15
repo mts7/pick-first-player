@@ -6,6 +6,7 @@ plugins {
 android {
     namespace = 'com.mts7.pickfirstplayer'
     compileSdk 37
+    ndkVersion '29.0.14206865'
 
     defaultConfig {
         applicationId "com.mts7.pickfirstplayer"
