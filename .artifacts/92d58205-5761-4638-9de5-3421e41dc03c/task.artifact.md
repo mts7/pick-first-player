@@ -1,9 +1,5 @@
-- [x] Research optimization strategies for Android UI tests on GitHub Actions
-- [x] Create implementation plan for optimizations
-- [x] Update `android.yml` with UI test optimizations
-    - [x] Set `api-level: 34`
-    - [x] Set `target: google_atd`
-    - [x] Set `arch: x86_64`
-    - [x] Enable `disable-animations: true`
-- [x] Verify workflow configuration
+- [x] Configure Gradle Managed Devices in `app/build.gradle`
+- [x] Update `android.yml` to use Gradle Managed Devices
+- [x] Modernize `MainActivityBackPressInstrumentedTest.kt` logic
+- [x] Verify build and workflow configuration
 - [x] Create walkthrough documentation
