@@ -419,14 +419,20 @@ fun PreviewChosenValue() {
     }
 }
 
+// Extracted from PlayerDirection so the rotation-per-direction mapping is directly unit
+// testable: Modifier.rotate() applies a drawing-time transform that doesn't show up in a
+// composable's measured/placed boundsInRoot, so there's no reliable way to verify the actual
+// rotation value through Compose UI testing alone.
+fun rotationFor(direction: Direction): Float = when (direction) {
+    Direction.LEFT -> 0.0F
+    Direction.SELF -> 270.0F
+    Direction.OTHER -> 90.0F
+    Direction.RIGHT -> 180.0F
+}
+
 @Composable
 fun PlayerDirection(direction: Direction, places: Int, refreshSelection: () -> Unit) {
-    val rotation = when (direction) {
-        Direction.LEFT -> 0.0F
-        Direction.SELF -> 270.0F
-        Direction.OTHER -> 90.0F
-        Direction.RIGHT -> 180.0F
-    }
+    val rotation = rotationFor(direction)
 
     val isVertical = (places == 0) || (direction == Direction.OTHER)
 

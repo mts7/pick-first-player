@@ -40,7 +40,7 @@ jobs:
           steps:
             - run:
                 name: Instrumented tests (Gradle Managed Device, ATD image)
-                command: ./gradlew pixel6Api34DebugAndroidTest --stacktrace
+                command: ./gradlew pixel6Api34DebugAndroidTest -Pandroid.testoptions.manageddevices.emulator.gpu=swiftshader_indirect --stacktrace
       - save_cache:
           key: android-sdk-machine-v1-{{ checksum "app/build.gradle" }}
           paths:
