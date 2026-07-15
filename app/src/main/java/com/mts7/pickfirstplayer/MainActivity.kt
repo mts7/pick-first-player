@@ -5,18 +5,22 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -54,6 +58,7 @@ import kotlin.system.exitProcess
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         setContent {
             val numberOfPlayers = rememberSaveable { mutableIntStateOf(0) }
             val player = rememberSaveable { mutableIntStateOf(0) }
@@ -145,25 +150,25 @@ fun MainScreen(
                 onResetClick = { updateNumber(0) })
         },
     ) { contentPadding ->
-        // unsure of what to do with the unused variable
-        contentPadding
         val configuration = LocalConfiguration.current
         val isPortrait = configuration.orientation == Configuration.ORIENTATION_PORTRAIT
 
-        if (numberOfPlayers > 0) {
-            val (direction, places) = getRelationalValues(
-                numberOfPlayers,
-                player
-            )
-            ResultScreen(
-                maxValue = numberOfPlayers,
-                direction = direction,
-                places = places,
-                refreshSelection = onRefresh,
-                isPortrait = isPortrait,
-            )
-        } else {
-            MainLayout(onNumberClick = { updateNumber(it) }, isPortrait = isPortrait)
+        Box(modifier = Modifier.padding(contentPadding)) {
+            if (numberOfPlayers > 0) {
+                val (direction, places) = getRelationalValues(
+                    numberOfPlayers,
+                    player
+                )
+                ResultScreen(
+                    maxValue = numberOfPlayers,
+                    direction = direction,
+                    places = places,
+                    refreshSelection = onRefresh,
+                    isPortrait = isPortrait,
+                )
+            } else {
+                MainLayout(onNumberClick = { updateNumber(it) }, isPortrait = isPortrait)
+            }
         }
     }
 }
@@ -182,7 +187,8 @@ fun TopBar() {
         //color = MaterialTheme.colorScheme.tertiary,
         color = if (isSystemInDarkTheme()) Blue80 else Blue60,
         modifier = Modifier
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .statusBarsPadding(),
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally
@@ -211,7 +217,9 @@ fun BottomBar(onExit: () -> Unit, displayReset: Boolean, onResetClick: () -> Uni
     Surface(
         //color = MaterialTheme.colorScheme.tertiary,
         color = if (isSystemInDarkTheme()) Blue80 else Blue60,
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
+            .navigationBarsPadding()
     ) {
         Row(
             modifier = Modifier
